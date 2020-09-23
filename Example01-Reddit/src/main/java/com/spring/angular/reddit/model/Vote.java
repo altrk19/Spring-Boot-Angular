@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
@@ -24,11 +23,19 @@ public class Vote {
     private VoteType voteType;
 
     @NotNull
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "postId", referencedColumnName = "postId")
+    @ManyToOne
+    @JoinColumn(name = "post_id")
     private Post post;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "userId", referencedColumnName = "userId")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
+
+    @Override
+    public String toString() {
+        return "Vote{" +
+                "voteId=" + voteId +
+                ", voteType=" + voteType +
+                '}';
+    }
 }

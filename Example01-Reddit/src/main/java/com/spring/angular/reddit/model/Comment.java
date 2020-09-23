@@ -9,7 +9,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
 
-import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
@@ -25,13 +24,22 @@ public class Comment {
     @NotEmpty
     private String text;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "postId", referencedColumnName = "postId")
+    @ManyToOne
+    @JoinColumn(name = "post_id")
     private Post post;
 
     private Instant createdDate;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "userId", referencedColumnName = "userId")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", text='" + text + '\'' +
+                ", createdDate=" + createdDate +
+                '}';
+    }
 }

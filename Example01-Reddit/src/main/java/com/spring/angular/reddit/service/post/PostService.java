@@ -1,14 +1,14 @@
 package com.spring.angular.reddit.service.post;
 
-import com.spring.angular.reddit.dto.PostRequest;
-import com.spring.angular.reddit.dto.PostResponse;
+import com.spring.angular.reddit.dto.PostRequestDto;
+import com.spring.angular.reddit.dto.PostResponseDto;
 
 import java.util.List;
 
 public interface PostService {
-    void save(PostRequest postRequest);
-    PostResponse getSinglePost(Long id);
-    List<PostResponse> getAllPosts();
-    List<PostResponse> getPostsBySubreddit(Long subredditId);
-    List<PostResponse> getPostsByUsername(String username);
+    void save(PostRequestDto postRequestDto);
+    PostResponseDto getSinglePost(Long id);
+    List<PostResponseDto> getAllPosts();
+    List<PostResponseDto> getPostsBySubreddit(Long subredditId);
+    List<PostResponseDto> getPostsByUsername(String username);
 }

@@ -4,18 +4,23 @@ import com.spring.angular.reddit.dto.SubredditDto;
 import com.spring.angular.reddit.exception.SpringRedditException;
 import com.spring.angular.reddit.model.Subreddit;
 import com.spring.angular.reddit.repository.SubredditRepository;
+import com.spring.angular.reddit.service.auth.AuthService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class SubredditServiceImpl implements SubredditService {
     private final SubredditRepository subredditRepository;
+    private final AuthService authService;
 
-    public SubredditServiceImpl(SubredditRepository subredditRepository) {
+    public SubredditServiceImpl(SubredditRepository subredditRepository,
+                                AuthService authService) {
         this.subredditRepository = subredditRepository;
+        this.authService = authService;
     }
 
     @Override
@@ -53,6 +58,8 @@ public class SubredditServiceImpl implements SubredditService {
         return Subreddit.builder().
                 name(subredditDto.getName())
                 .description(subredditDto.getDescription())
+                .createdDate(Instant.now())
+                .user(authService.getCurrentUser())
                 .build();
     }
 }

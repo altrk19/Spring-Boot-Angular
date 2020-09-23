@@ -10,7 +10,6 @@ import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 import java.util.List;
 
-import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
@@ -29,11 +28,22 @@ public class Subreddit {
     @NotBlank(message = "Description is required")
     private String description;
 
-    @OneToMany(fetch = LAZY)
+    @OneToMany(mappedBy = "subreddit")
     private List<Post> posts;
 
     private Instant createdDate;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
+
+    @Override
+    public String toString() {
+        return "Subreddit{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", createdDate=" + createdDate +
+                '}';
+    }
 }

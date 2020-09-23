@@ -11,6 +11,7 @@ import com.spring.angular.reddit.repository.UserRepository;
 import com.spring.angular.reddit.repository.VerificationTokenRepository;
 import com.spring.angular.reddit.security.JwtProvider;
 import com.spring.angular.reddit.service.mail.MailService;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -93,6 +94,12 @@ public class AuthServiceImpl implements AuthService {
                 getContext().getAuthentication().getPrincipal();
         return userRepository.findByUsername(user.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User name not found - " + user.getUsername()));
+    }
+
+    @Override
+    public boolean isLoggedIn() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
     }
 
     @Transactional

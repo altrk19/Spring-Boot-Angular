@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PostResponse {
+public class PostResponseDto {
     private Long id;
     private String postName;
     private String url;
@@ -19,6 +19,6 @@ public class PostResponse {
     private Integer voteCount;
     private Integer commentCount;
     private String duration;
-    private boolean upVote;
-    private boolean downVote;
+    private Boolean upVote;
+    private Boolean downVote;
 }
