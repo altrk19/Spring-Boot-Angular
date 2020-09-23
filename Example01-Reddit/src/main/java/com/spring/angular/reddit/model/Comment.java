@@ -1,6 +1,7 @@
 package com.spring.angular.reddit.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 public class Comment {
     @Id
     @GeneratedValue(strategy = IDENTITY)
