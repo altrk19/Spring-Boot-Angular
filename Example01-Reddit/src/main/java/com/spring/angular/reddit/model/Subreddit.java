@@ -28,12 +28,12 @@ public class Subreddit {
     @NotBlank(message = "Description is required")
     private String description;
 
-    @OneToMany(mappedBy = "subreddit")
+    @OneToMany(mappedBy = "subreddit", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Post> posts;
 
     private Instant createdDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
