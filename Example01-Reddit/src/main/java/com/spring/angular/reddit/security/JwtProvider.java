@@ -4,6 +4,7 @@ import com.spring.angular.reddit.exception.SpringRedditException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
@@ -15,12 +16,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.*;
 import java.security.cert.CertificateException;
+import java.time.Instant;
+import java.util.Date;
 
 @Service
 @Slf4j
 public class JwtProvider {
-
+    private Long jwtExpirationInMillis;
     private KeyStore keyStore;
+
+    public JwtProvider(@Value("${jwt.expiration.time}") Long jwtExpirationInMillis) {
+        this.jwtExpirationInMillis = jwtExpirationInMillis;
+    }
+
+    public Long getJwtExpirationInMillis() {
+        return jwtExpirationInMillis;
+    }
 
     @PostConstruct
     public void init() {
@@ -47,7 +58,18 @@ public class JwtProvider {
         User principal = (User) authentication.getPrincipal();
         return Jwts.builder()
                 .setSubject(principal.getUsername())
+                .setIssuedAt(Date.from(Instant.now()))
                 .signWith(getPrivateKey())
+                .setExpiration(Date.from(Instant.now().plusMillis(jwtExpirationInMillis)))
+                .compact();
+    }
+
+    public String generateTokenWithUserName(String username){
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(Date.from(Instant.now()))
+                .signWith(getPrivateKey())
+                .setExpiration(Date.from(Instant.now().plusMillis(jwtExpirationInMillis)))
                 .compact();
     }
 
@@ -79,4 +101,5 @@ public class JwtProvider {
                 .getBody();
         return claims.getSubject();
     }
+
 }

@@ -2,6 +2,7 @@ package com.spring.angular.reddit.service.auth;
 
 import com.spring.angular.reddit.dto.AuthenticationResponse;
 import com.spring.angular.reddit.dto.LoginRequest;
+import com.spring.angular.reddit.dto.RefreshTokenRequest;
 import com.spring.angular.reddit.dto.RegisterRequest;
 import com.spring.angular.reddit.model.User;
 
@@ -15,4 +16,6 @@ public interface AuthService {
     User getCurrentUser();
 
     boolean isLoggedIn();
+
+    AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest);
 }

@@ -1,9 +1,6 @@
 package com.spring.angular.reddit.service.auth;
 
-import com.spring.angular.reddit.dto.AuthenticationResponse;
-import com.spring.angular.reddit.dto.LoginRequest;
-import com.spring.angular.reddit.dto.NotificationEmail;
-import com.spring.angular.reddit.dto.RegisterRequest;
+import com.spring.angular.reddit.dto.*;
 import com.spring.angular.reddit.exception.SpringRedditException;
 import com.spring.angular.reddit.model.User;
 import com.spring.angular.reddit.model.VerificationToken;
@@ -11,6 +8,7 @@ import com.spring.angular.reddit.repository.UserRepository;
 import com.spring.angular.reddit.repository.VerificationTokenRepository;
 import com.spring.angular.reddit.security.JwtProvider;
 import com.spring.angular.reddit.service.mail.MailService;
+import com.spring.angular.reddit.service.refreshtoken.RefreshTokenService;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,19 +32,22 @@ public class AuthServiceImpl implements AuthService {
     private final MailService mailService;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
+    private final RefreshTokenService refreshTokenService;
 
     public AuthServiceImpl(PasswordEncoder passwordEncoder,
                            UserRepository userRepository,
                            VerificationTokenRepository verificationTokenRepository,
                            MailService mailService,
                            AuthenticationManager authenticationManager,
-                           JwtProvider jwtProvider) {
+                           JwtProvider jwtProvider,
+                           RefreshTokenService refreshTokenService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.verificationTokenRepository = verificationTokenRepository;
         this.mailService = mailService;
         this.authenticationManager = authenticationManager;
         this.jwtProvider = jwtProvider;
+        this.refreshTokenService = refreshTokenService;
     }
 
     @Override
@@ -82,10 +83,13 @@ public class AuthServiceImpl implements AuthService {
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtProvider.generateToken(authentication);
-        AuthenticationResponse authenticationResponse = new AuthenticationResponse();
-        authenticationResponse.setUsername(loginRequest.getUsername());
-        authenticationResponse.setAuthenticationToken(token);
-        return authenticationResponse;
+
+        return AuthenticationResponse.builder()
+                .authenticationToken(token)
+                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+                .username(loginRequest.getUsername())
+                .build();
     }
 
     @Override
@@ -100,6 +104,18 @@ public class AuthServiceImpl implements AuthService {
     public boolean isLoggedIn() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
+    }
+
+    @Override
+    public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+        String token = jwtProvider.generateTokenWithUserName(refreshTokenRequest.getUsername());
+        return AuthenticationResponse.builder()
+                .authenticationToken(token)
+                .refreshToken(refreshTokenRequest.getRefreshToken())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+                .username(refreshTokenRequest.getUsername())
+                .build();
     }
 
     @Transactional
