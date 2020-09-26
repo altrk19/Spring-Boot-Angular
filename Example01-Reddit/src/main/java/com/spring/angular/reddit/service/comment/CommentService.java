@@ -1,11 +1,14 @@
 package com.spring.angular.reddit.service.comment;
 
-import com.spring.angular.reddit.dto.CommentsDto;
+import com.spring.angular.reddit.exception.ServerException;
+import com.spring.angular.reddit.model.Comment;
 
 import java.util.List;
 
 public interface CommentService {
-    void saveComment(CommentsDto commentsDto);
-    List<CommentsDto> getAllCommentsForPost(Long postId);
-    List<CommentsDto> getAllCommentsForUser(String userName);
+    void saveComment(Comment comment) throws ServerException;
+
+    List<Comment> getAllCommentsForPost(Long postId) throws ServerException;
+
+    List<Comment> getAllCommentsForUser(String userName) throws ServerException;
 }

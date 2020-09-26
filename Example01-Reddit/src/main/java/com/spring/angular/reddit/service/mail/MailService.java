@@ -1,8 +1,11 @@
 package com.spring.angular.reddit.service.mail;
 
-import com.spring.angular.reddit.dto.NotificationEmail;
-import com.spring.angular.reddit.exception.SpringRedditException;
+import com.spring.angular.reddit.constants.CommonConstants;
+import com.spring.angular.reddit.constants.RequestErrorTypes;
+import com.spring.angular.reddit.resource.NotificationEmailResource;
+import com.spring.angular.reddit.exception.ServerException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -23,18 +26,20 @@ public class MailService {
     }
 
     @Async
-    public void sendMail(NotificationEmail notificationEmail){
+    public void sendMail(NotificationEmailResource notificationEmailResource) throws ServerException {
         MimeMessagePreparator messagePreparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-            messageHelper.setTo(notificationEmail.getRecipient());
-            messageHelper.setSubject(notificationEmail.getSubject());
-            messageHelper.setText(mailContentBuilder.build(notificationEmail.getBody()));
+            messageHelper.setTo(notificationEmailResource.getRecipient());
+            messageHelper.setSubject(notificationEmailResource.getSubject());
+            messageHelper.setText(mailContentBuilder.build(notificationEmailResource.getBody()));
         };
         try{
             mailSender.send(messagePreparator);
             log.info("Activation mail sent");
         }catch (MailException e){
-            throw new SpringRedditException("Exception occurred while sending activation mail");
+            log.debug("Exception occurred while sending activation mail");
+            throw new ServerException(RequestErrorTypes.GENERIC_SERVICE_ERROR,new String[]{CommonConstants.ACTIVATION_MAIL_FAILED,
+                    HttpStatus.SERVICE_UNAVAILABLE.toString()}, HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
 }

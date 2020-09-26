@@ -1,65 +1,53 @@
 package com.spring.angular.reddit.service.subreddit;
 
-import com.spring.angular.reddit.dto.SubredditDto;
-import com.spring.angular.reddit.exception.SpringRedditException;
+import com.spring.angular.reddit.constants.CommonConstants;
+import com.spring.angular.reddit.constants.RequestErrorTypes;
+import com.spring.angular.reddit.exception.ServerException;
 import com.spring.angular.reddit.model.Subreddit;
 import com.spring.angular.reddit.repository.SubredditRepository;
-import com.spring.angular.reddit.service.auth.AuthService;
+import com.spring.angular.reddit.service.user.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class SubredditServiceImpl implements SubredditService {
     private final SubredditRepository subredditRepository;
-    private final AuthService authService;
+    private final UserService userService;
 
     public SubredditServiceImpl(SubredditRepository subredditRepository,
-                                AuthService authService) {
+                                UserService userService) {
         this.subredditRepository = subredditRepository;
-        this.authService = authService;
+        this.userService = userService;
     }
 
     @Override
     @Transactional
-    public SubredditDto saveSubreddit(SubredditDto subredditDto) {
-        Subreddit savedSubreddit = subredditRepository.save(mapSubredditEntity(subredditDto));
-        subredditDto.setId(savedSubreddit.getId());
-        return subredditDto;
+    public Subreddit saveSubreddit(Subreddit subreddit) {
+        return subredditRepository.save(subreddit);
     }
 
     @Override
-    public List<SubredditDto> getAllSubreddits() {
-        return subredditRepository.findAll()
-                .stream()
-                .map(this::mapToSubredditDto)
-                .collect(Collectors.toList());
+    public List<Subreddit> getAllSubreddits() {
+        return subredditRepository.findAll();
     }
 
     @Override
-    public SubredditDto getSingleSubreddit(Long id) {
-        return mapToSubredditDto(subredditRepository.findById(id).orElseThrow(() -> new SpringRedditException("User not found - " + id)));
+    public Subreddit getSingleSubreddit(Long id) throws ServerException {
+        return subredditRepository.findById(id).orElseThrow(
+                () -> new ServerException(RequestErrorTypes.UNKNOWN_RESOURCE,
+                        new String[]{CommonConstants.SUB_REDDIT, String.valueOf(String.valueOf(id))},
+                        HttpStatus.NOT_FOUND));
 
     }
 
-    private SubredditDto mapToSubredditDto(Subreddit subreddit){
-        return SubredditDto.builder()
-                .id(subreddit.getId())
-                .name(subreddit.getName())
-                .description(subreddit.getDescription())
-                .numberOfPosts(subreddit.getPosts().size())
-                .build();
-    }
-
-    private Subreddit mapSubredditEntity(SubredditDto subredditDto) {
-        return Subreddit.builder().
-                name(subredditDto.getName())
-                .description(subredditDto.getDescription())
-                .createdDate(Instant.now())
-                .user(authService.getCurrentUser())
-                .build();
+    @Override
+    public Subreddit getSingleSubredditByName(String name) throws ServerException {
+        return subredditRepository.findByName(name).orElseThrow(() -> new ServerException(
+                RequestErrorTypes.UNKNOWN_RESOURCE,
+                new String[]{CommonConstants.SUB_REDDIT, String.valueOf(String.valueOf(name))},
+                HttpStatus.NOT_FOUND));
     }
 }

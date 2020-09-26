@@ -1,14 +1,18 @@
 package com.spring.angular.reddit.service.post;
 
-import com.spring.angular.reddit.dto.PostRequestDto;
-import com.spring.angular.reddit.dto.PostResponseDto;
+import com.spring.angular.reddit.exception.ServerException;
+import com.spring.angular.reddit.model.Post;
 
 import java.util.List;
 
 public interface PostService {
-    void save(PostRequestDto postRequestDto);
-    PostResponseDto getSinglePost(Long id);
-    List<PostResponseDto> getAllPosts();
-    List<PostResponseDto> getPostsBySubreddit(Long subredditId);
-    List<PostResponseDto> getPostsByUsername(String username);
+    void save(Post post) throws ServerException;
+
+    Post getSinglePost(Long id) throws ServerException;
+
+    List<Post> getAllPosts();
+
+    List<Post> getPostsBySubreddit(Long subredditId) throws ServerException;
+
+    List<Post> getPostsByUsername(String username) throws ServerException;
 }
