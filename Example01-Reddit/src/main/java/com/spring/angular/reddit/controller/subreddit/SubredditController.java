@@ -50,4 +50,12 @@ public class SubredditController {
         log.info("Request completed to get single subreddit with subredditId {}", id);
         return ResponseEntity.status(HttpStatus.OK).body(subredditResource);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSubreddit(@PathVariable Long id) {
+        log.info("Request received to delete subreddit with subredditId {}", id);
+        subredditService.deleteSubreddit(id);
+        log.info("Request completed to delete subreddit with subredditId {}", id);
+        return ResponseEntity.noContent().build();
+    }
 }

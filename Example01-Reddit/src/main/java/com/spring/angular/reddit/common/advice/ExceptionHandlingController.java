@@ -1,12 +1,12 @@
 package com.spring.angular.reddit.common.advice;
 
 import com.spring.angular.reddit.constants.RequestErrorTypes;
+import com.spring.angular.reddit.exception.ClientException;
+import com.spring.angular.reddit.exception.ServerException;
 import com.spring.angular.reddit.resource.errorhandling.PolicyException;
 import com.spring.angular.reddit.resource.errorhandling.RequestError;
 import com.spring.angular.reddit.resource.errorhandling.RequestErrorResource;
 import com.spring.angular.reddit.resource.errorhandling.ServiceException;
-import com.spring.angular.reddit.exception.ClientException;
-import com.spring.angular.reddit.exception.ServerException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

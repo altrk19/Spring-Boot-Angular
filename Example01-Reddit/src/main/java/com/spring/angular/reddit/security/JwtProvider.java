@@ -1,10 +1,14 @@
 package com.spring.angular.reddit.security;
 
+import com.spring.angular.reddit.constants.RequestErrorTypes;
+import com.spring.angular.reddit.exception.ClientException;
 import com.spring.angular.reddit.exception.SpringRedditException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +66,7 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String generateTokenWithUserName(String username){
+    public String generateTokenWithUserName(String username) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(Date.from(Instant.now()))
@@ -79,7 +83,7 @@ public class JwtProvider {
         }
     }
 
-    public boolean validateToken(String jwt){
+    public boolean validateToken(String jwt) {
         Jwts.parser().setSigningKey(getPublicKey()).parseClaimsJws(jwt);
         return true;
     }
@@ -92,7 +96,7 @@ public class JwtProvider {
         }
     }
 
-    public String getUsernameFromJwt(String token){
+    public String getUsernameFromJwt(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(getPublicKey())
                 .parseClaimsJws(token)

@@ -46,4 +46,9 @@ public class SubredditServiceImpl implements SubredditService {
                 new String[]{CommonConstants.SUB_REDDIT, String.valueOf(String.valueOf(name))},
                 HttpStatus.NOT_FOUND));
     }
+
+    @Override
+    public void deleteSubreddit(Long id) {
+        subredditRepository.deleteById(id);
+    }
 }

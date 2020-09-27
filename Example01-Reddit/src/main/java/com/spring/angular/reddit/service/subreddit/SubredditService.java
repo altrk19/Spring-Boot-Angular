@@ -14,4 +14,5 @@ public interface SubredditService {
 
     Subreddit getSingleSubredditByName(String name) throws ServerException;
 
+    void deleteSubreddit(Long id);
 }

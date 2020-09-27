@@ -1,6 +1,12 @@
 package com.spring.angular.reddit.security.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.angular.reddit.constants.RequestErrorTypes;
+import com.spring.angular.reddit.resource.errorhandling.PolicyException;
+import com.spring.angular.reddit.resource.errorhandling.RequestError;
+import com.spring.angular.reddit.resource.errorhandling.RequestErrorResource;
 import com.spring.angular.reddit.security.JwtProvider;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,10 +35,36 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                    FilterChain filterChain) throws ServletException, IOException {
+                                    FilterChain filterChain) throws IOException, ServletException {
         String jwt = getJwtFromRequest(httpServletRequest);
 
-        if (StringUtils.hasText(jwt) && jwtProvider.validateToken(jwt)) {
+        if (StringUtils.hasText(jwt)) {
+            try {
+                jwtProvider.validateToken(jwt);
+            } catch (ExpiredJwtException ex) {
+                // Token is expired. We have to cut the process here.
+                httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                httpServletResponse.setContentType("application/json");
+
+                RequestErrorResource requestErrorResource =
+                        getRequestErrorResource(RequestErrorTypes.EXPIRED_ACCESS_TOKEN);
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                httpServletResponse.getWriter().write(objectMapper.writeValueAsString(requestErrorResource));
+                return;
+            } catch (Exception e) {
+                // Token is not valid. We have to cut the process here.
+                httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                httpServletResponse.setContentType("application/json");
+
+                RequestErrorResource requestErrorResource =
+                        getRequestErrorResource(RequestErrorTypes.INVALID_ACCESS_TOKEN);
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                httpServletResponse.getWriter().write(objectMapper.writeValueAsString(requestErrorResource));
+                return;
+            }
+
             String username = jwtProvider.getUsernameFromJwt(jwt);
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -53,5 +85,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return bearerToken.substring(7);
         }
         return bearerToken;
+    }
+
+    private RequestErrorResource getRequestErrorResource(RequestErrorTypes requestErrorTypes) {
+        final PolicyException serviceException = new PolicyException(requestErrorTypes, null);
+        final RequestError requestError = new RequestError();
+        requestError.setPolicyException(serviceException);
+        return new RequestErrorResource(requestError);
     }
 }

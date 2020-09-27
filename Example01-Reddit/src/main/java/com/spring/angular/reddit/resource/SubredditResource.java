@@ -1,10 +1,7 @@
 package com.spring.angular.reddit.resource;
 
-import lombok.Builder;
-
 import javax.validation.constraints.NotBlank;
 
-@Builder
 public class SubredditResource extends DtoBase{
     private Long id;
 

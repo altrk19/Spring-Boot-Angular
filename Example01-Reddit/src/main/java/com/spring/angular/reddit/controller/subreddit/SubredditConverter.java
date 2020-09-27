@@ -18,12 +18,16 @@ public class SubredditConverter {
     }
 
     public SubredditResource toResource(Subreddit subreddit) {
-        return SubredditResource.builder()
-                .id(subreddit.getId())
-                .name(subreddit.getName())
-                .description(subreddit.getDescription())
-                .numberOfPosts(subreddit.getPosts().size())
-                .build();
+        SubredditResource subredditResource = new SubredditResource();
+        subredditResource.setId(subreddit.getId());
+        subredditResource.setName(subreddit.getName());
+        subredditResource.setDescription(subreddit.getDescription());
+
+        if(Objects.nonNull(subreddit.getPosts())){
+            subredditResource.setNumberOfPosts(subreddit.getPosts().size());
+        }
+
+        return subredditResource;
     }
 
     public List<SubredditResource> toResourceList(List<Subreddit> subreddits) {
