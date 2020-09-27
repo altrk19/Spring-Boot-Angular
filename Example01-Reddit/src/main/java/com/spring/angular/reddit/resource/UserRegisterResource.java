@@ -1,13 +1,8 @@
 package com.spring.angular.reddit.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import javax.validation.constraints.NotBlank;
 
-@JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class UserRegisterRequestResource {
+public class UserRegisterResource extends DtoBase{
     @NotBlank(message = "email cannot be blank")
     private String email;
 
@@ -17,10 +12,10 @@ public class UserRegisterRequestResource {
     @NotBlank(message = "password cannot be blank")
     private String password;
 
-    public UserRegisterRequestResource() {
+    public UserRegisterResource() {
     }
 
-    public UserRegisterRequestResource(String email, String username, String password) {
+    public UserRegisterResource(String email, String username, String password) {
         this.email = email;
         this.username = username;
         this.password = password;

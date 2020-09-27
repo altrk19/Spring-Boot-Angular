@@ -1,11 +1,6 @@
 package com.spring.angular.reddit.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
-@JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class NotificationEmailResource {
+public class NotificationEmailResource extends DtoBase{
     private String subject;
     private String recipient;
     private String body;

@@ -1,25 +1,18 @@
 package com.spring.angular.reddit.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Builder;
 
-import java.time.Instant;
-
 @Builder
-@JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class LoginResponseResource extends DtoBase {
     private String authenticationToken;
     private String refreshToken;
-    private Instant expiresAt;
+    private Long expiresAt;
     private String username;
 
     public LoginResponseResource() {
     }
 
-    public LoginResponseResource(String authenticationToken, String refreshToken, Instant expiresAt,
-                                 String username) {
+    public LoginResponseResource(String authenticationToken, String refreshToken, Long expiresAt, String username) {
         this.authenticationToken = authenticationToken;
         this.refreshToken = refreshToken;
         this.expiresAt = expiresAt;
@@ -42,11 +35,11 @@ public class LoginResponseResource extends DtoBase {
         this.refreshToken = refreshToken;
     }
 
-    public Instant getExpiresAt() {
+    public Long getExpiresAt() {
         return expiresAt;
     }
 
-    public void setExpiresAt(Instant expiresAt) {
+    public void setExpiresAt(Long expiresAt) {
         this.expiresAt = expiresAt;
     }
 

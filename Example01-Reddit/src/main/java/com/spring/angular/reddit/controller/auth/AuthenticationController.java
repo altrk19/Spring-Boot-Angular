@@ -1,9 +1,11 @@
 package com.spring.angular.reddit.controller.auth;
 
 import com.spring.angular.reddit.exception.ClientException;
+import com.spring.angular.reddit.exception.ServerException;
 import com.spring.angular.reddit.resource.LoginRequestResource;
 import com.spring.angular.reddit.resource.LoginResponseResource;
-import com.spring.angular.reddit.resource.RefreshTokenRequestResource;
+import com.spring.angular.reddit.resource.LoginWithRefreshTokenResource;
+import com.spring.angular.reddit.resource.LogoutResource;
 import com.spring.angular.reddit.service.auth.AuthenticationService;
 import com.spring.angular.reddit.service.refreshtoken.RefreshTokenService;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +32,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseResource> login(@Valid @RequestBody LoginRequestResource loginRequestResource) {
+    public ResponseEntity<LoginResponseResource> login(@Valid @RequestBody LoginRequestResource loginRequestResource)
+            throws ServerException {
         log.info("Request received to login user with username {}", loginRequestResource.getUsername());
         LoginResponseResource loginResponseResource = authenticationService.login(loginRequestResource);
         log.info("Request completed to login user with username {}", loginRequestResource.getUsername());
@@ -39,22 +42,23 @@ public class AuthenticationController {
 
     @PostMapping("/refresh/token")
     public ResponseEntity<LoginResponseResource> loginWithRefreshToken(
-            @Valid @RequestBody RefreshTokenRequestResource refreshTokenRequestResource) throws ClientException {
+            @Valid @RequestBody LoginWithRefreshTokenResource loginWithRefreshTokenResource) throws ClientException {
         log.info("Request received to login with refresh token with username {}",
-                refreshTokenRequestResource.getUsername());
+                loginWithRefreshTokenResource.getUsername());
         LoginResponseResource loginResponseResource =
-                refreshTokenService.loginWithRefreshToken(refreshTokenRequestResource);
+                refreshTokenService.loginWithRefreshToken(loginWithRefreshTokenResource);
         log.info("Request completed to login with refresh token with username {}",
-                refreshTokenRequestResource.getUsername());
+                loginWithRefreshTokenResource.getUsername());
         return ResponseEntity.status(HttpStatus.OK).body(loginResponseResource);
     }
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(
-            @Valid @RequestBody RefreshTokenRequestResource refreshTokenRequestResource) {
-        log.info("Request received to logout with with username {}", refreshTokenRequestResource.getUsername());
-        refreshTokenService.deleteRefreshToken(refreshTokenRequestResource.getRefreshToken());
-        log.info("Request completed to logout with with username {}", refreshTokenRequestResource.getUsername());
+            @Valid @RequestBody LogoutResource logoutResource) throws ClientException {
+        log.info("Request received to logout with with username {}", logoutResource.getUsername());
+        authenticationService.logout(logoutResource);
+        refreshTokenService.deleteRefreshToken(logoutResource.getRefreshToken());
+        log.info("Request completed to logout with with username {}", logoutResource.getUsername());
         return ResponseEntity.status(HttpStatus.OK).body("Refresh token deleted successfully");
     }
 }

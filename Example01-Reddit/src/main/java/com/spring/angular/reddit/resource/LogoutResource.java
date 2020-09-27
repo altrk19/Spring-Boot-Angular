@@ -1,23 +1,18 @@
 package com.spring.angular.reddit.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import javax.validation.constraints.NotBlank;
 
-@JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class RefreshTokenRequestResource {
+public class LogoutResource extends DtoBase{
     @NotBlank(message = "refreshToken cannot be blank")
     private String refreshToken;
 
     @NotBlank(message = "username cannot be blank")
     private String username;
 
-    public RefreshTokenRequestResource() {
+    public LogoutResource() {
     }
 
-    public RefreshTokenRequestResource(@NotBlank String refreshToken, String username) {
+    public LogoutResource(@NotBlank String refreshToken, String username) {
         this.refreshToken = refreshToken;
         this.username = username;
     }

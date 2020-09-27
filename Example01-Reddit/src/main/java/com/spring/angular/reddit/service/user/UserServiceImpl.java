@@ -5,16 +5,18 @@ import com.spring.angular.reddit.constants.RequestErrorTypes;
 import com.spring.angular.reddit.exception.ClientException;
 import com.spring.angular.reddit.exception.ServerException;
 import com.spring.angular.reddit.model.User;
-import com.spring.angular.reddit.model.VerificationToken;
+import com.spring.angular.reddit.model.UserActivationToken;
 import com.spring.angular.reddit.repository.UserRepository;
 import com.spring.angular.reddit.repository.VerificationTokenRepository;
 import com.spring.angular.reddit.resource.NotificationEmailResource;
+import com.spring.angular.reddit.security.JwtProvider;
 import com.spring.angular.reddit.service.mail.MailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -22,17 +24,19 @@ import java.util.UUID;
 @Slf4j
 public class UserServiceImpl implements UserService {
     private static final String MAIL_BODY =
-            "Thank you for signing up to Spring Reddit, \nplease click on the below url to activate your account : http://localhost:8080/api/auth/accountVerification/";
+            "Thank you for signing up to Spring Reddit, \nplease click on the below url to activate your account : http://localhost:8080/api/user/userVerification/";
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
     private final MailService mailService;
+    private final JwtProvider jwtProvider;
 
     public UserServiceImpl(UserRepository userRepository,
                            VerificationTokenRepository verificationTokenRepository,
-                           MailService mailService) {
+                           MailService mailService, JwtProvider jwtProvider) {
         this.userRepository = userRepository;
         this.verificationTokenRepository = verificationTokenRepository;
         this.mailService = mailService;
+        this.jwtProvider = jwtProvider;
     }
 
     @Override
@@ -41,7 +45,7 @@ public class UserServiceImpl implements UserService {
         checkUserIsDuplicate(user);
 
         userRepository.save(user);
-        String token = generateVerificationToken(user);
+        String token = generateUserActivationToken(user);
 
         NotificationEmailResource notificationEmailResource = new NotificationEmailResource();
         notificationEmailResource.setSubject("Please activate your account");
@@ -53,10 +57,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void verifyUser(String token) throws ServerException, ClientException {
-        VerificationToken verificationToken = verificationTokenRepository.findByToken(token).orElseThrow(
+        UserActivationToken userActivationToken = verificationTokenRepository.findByToken(token).orElseThrow(
                 () -> new ClientException(RequestErrorTypes.INVALID_ACCESS_TOKEN, null, HttpStatus.FORBIDDEN));
 
-        String username = verificationToken.getUser().getUsername();
+        String username = userActivationToken.getUser().getUsername();
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new ServerException(RequestErrorTypes.UNKNOWN_RESOURCE,
                         new String[]{CommonConstants.USERNAME, username}, HttpStatus.NOT_FOUND));
@@ -72,14 +76,15 @@ public class UserServiceImpl implements UserService {
                         new String[]{CommonConstants.USERNAME, username}, HttpStatus.NOT_FOUND));
     }
 
-    private String generateVerificationToken(User user) {
+    private String generateUserActivationToken(User user) {
         String token = UUID.randomUUID().toString();
 
-        VerificationToken verificationToken = new VerificationToken();
-        verificationToken.setToken(token);
-        verificationToken.setUser(user);
+        UserActivationToken userActivationToken = new UserActivationToken();
+        userActivationToken.setToken(token);
+        userActivationToken.setUser(user);
+        userActivationToken.setExpiryDate(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()));
 
-        verificationTokenRepository.save(verificationToken);
+        verificationTokenRepository.save(userActivationToken);
         return token;
     }
 

@@ -1,12 +1,17 @@
 package com.spring.angular.reddit.service.auth;
 
+import com.spring.angular.reddit.constants.RequestErrorTypes;
+import com.spring.angular.reddit.exception.ClientException;
 import com.spring.angular.reddit.exception.ServerException;
+import com.spring.angular.reddit.model.RefreshToken;
 import com.spring.angular.reddit.model.User;
 import com.spring.angular.reddit.resource.LoginRequestResource;
 import com.spring.angular.reddit.resource.LoginResponseResource;
+import com.spring.angular.reddit.resource.LogoutResource;
 import com.spring.angular.reddit.security.JwtProvider;
 import com.spring.angular.reddit.service.refreshtoken.RefreshTokenService;
 import com.spring.angular.reddit.service.user.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,16 +38,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public LoginResponseResource login(LoginRequestResource loginRequestResource) {
+    public LoginResponseResource login(LoginRequestResource loginRequestResource) throws ServerException {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequestResource.getUsername(), loginRequestResource.getPassword()));
+                new UsernamePasswordAuthenticationToken(loginRequestResource.getUsername(),
+                        loginRequestResource.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtProvider.generateToken(authentication);
+
+        org.springframework.security.core.userdetails.User principal =
+                (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+
+        User user = userService.getSingleUserByUsername(principal.getUsername());
+
+        String token = jwtProvider.generateToken(principal);
 
         return LoginResponseResource.builder()
                 .authenticationToken(token)
-                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
-                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+                .refreshToken(refreshTokenService.generateRefreshToken(user).getToken())
+                .expiresAt(Instant.now().toEpochMilli() + jwtProvider.getJwtExpirationInMillis())
                 .username(loginRequestResource.getUsername())
                 .build();
     }
@@ -64,5 +76,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public User getUserByUsername(String username) throws ServerException {
         return userService.getSingleUserByUsername(username);
+    }
+
+    @Override
+    public void logout(LogoutResource logoutResource) throws ClientException {
+        RefreshToken refreshToken = refreshTokenService.getRefreshTokenByToken(logoutResource.getRefreshToken());
+
+        if (!logoutResource.getUsername().equals(refreshToken.getUser().getUsername())) {
+            throw new ClientException(RequestErrorTypes.INVALID_ACCESS_TOKEN, null, HttpStatus.FORBIDDEN);
+        }
     }
 }

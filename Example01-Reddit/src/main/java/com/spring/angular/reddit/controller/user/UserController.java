@@ -2,7 +2,7 @@ package com.spring.angular.reddit.controller.user;
 
 import com.spring.angular.reddit.exception.ClientException;
 import com.spring.angular.reddit.exception.ServerException;
-import com.spring.angular.reddit.resource.UserRegisterRequestResource;
+import com.spring.angular.reddit.resource.UserRegisterResource;
 import com.spring.angular.reddit.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,11 +25,11 @@ public class UserController {
 
     @PostMapping("/signUp")
     public ResponseEntity<String> createUser(
-            @Valid @RequestBody UserRegisterRequestResource userRegisterRequestResource)
+            @Valid @RequestBody UserRegisterResource userRegisterResource)
             throws ServerException, ClientException {
-        log.info("Request received to create user with username {}", userRegisterRequestResource.getUsername());
-        userService.signUp(userConverter.toEntity(userRegisterRequestResource));
-        log.info("Request completed to create user with username {}", userRegisterRequestResource.getUsername());
+        log.info("Request received to create user with username {}", userRegisterResource.getUsername());
+        userService.signUp(userConverter.toEntity(userRegisterResource));
+        log.info("Request completed to create user with username {}", userRegisterResource.getUsername());
         return ResponseEntity.status(HttpStatus.OK).body("Account Registration Successful");
     }
 

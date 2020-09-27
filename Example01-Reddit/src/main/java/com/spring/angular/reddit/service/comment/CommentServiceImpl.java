@@ -1,17 +1,16 @@
 package com.spring.angular.reddit.service.comment;
 
 
-import com.spring.angular.reddit.resource.NotificationEmailResource;
 import com.spring.angular.reddit.exception.ServerException;
 import com.spring.angular.reddit.model.Comment;
 import com.spring.angular.reddit.model.Post;
 import com.spring.angular.reddit.model.User;
 import com.spring.angular.reddit.repository.CommentRepository;
+import com.spring.angular.reddit.resource.NotificationEmailResource;
 import com.spring.angular.reddit.service.auth.AuthenticationService;
 import com.spring.angular.reddit.service.mail.MailContentBuilder;
 import com.spring.angular.reddit.service.mail.MailService;
 import com.spring.angular.reddit.service.post.PostService;
-import com.spring.angular.reddit.service.user.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

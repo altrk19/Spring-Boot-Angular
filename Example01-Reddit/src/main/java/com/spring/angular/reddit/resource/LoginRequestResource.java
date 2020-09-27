@@ -1,13 +1,8 @@
 package com.spring.angular.reddit.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import javax.validation.constraints.NotBlank;
 
-@JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class LoginRequestResource {
+public class LoginRequestResource extends DtoBase {
     @NotBlank(message = "username cannot be blank")
     private String username;
 

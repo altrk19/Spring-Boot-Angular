@@ -1,15 +1,11 @@
 package com.spring.angular.reddit.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Builder;
 
 import javax.validation.constraints.NotBlank;
 
-@JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
-public class SubredditResource {
+public class SubredditResource extends DtoBase{
     private Long id;
 
     @NotBlank(message = "name cannot be blank")

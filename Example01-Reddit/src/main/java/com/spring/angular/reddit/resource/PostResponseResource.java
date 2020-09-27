@@ -1,13 +1,9 @@
 package com.spring.angular.reddit.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Builder;
 
-@JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
-public class PostResponseResource {
+public class PostResponseResource extends DtoBase{
     private Long id;
     private String postName;
     private String url;

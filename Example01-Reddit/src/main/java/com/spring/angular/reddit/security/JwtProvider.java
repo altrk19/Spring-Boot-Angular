@@ -5,7 +5,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
@@ -54,10 +53,9 @@ public class JwtProvider {
         }
     }
 
-    public String generateToken(Authentication authentication) {
-        User principal = (User) authentication.getPrincipal();
+    public String generateToken(User user) {
         return Jwts.builder()
-                .setSubject(principal.getUsername())
+                .setSubject(user.getUsername())
                 .setIssuedAt(Date.from(Instant.now()))
                 .signWith(getPrivateKey())
                 .setExpiration(Date.from(Instant.now().plusMillis(jwtExpirationInMillis)))
