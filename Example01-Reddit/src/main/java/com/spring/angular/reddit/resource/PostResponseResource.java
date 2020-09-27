@@ -23,6 +23,22 @@ public class PostResponseResource {
     public PostResponseResource() {
     }
 
+    public PostResponseResource(Long id, String postName, String url, String description, String userName,
+                                String subredditName, Integer voteCount, Integer commentCount, String duration,
+                                Boolean upVote, Boolean downVote) {
+        this.id = id;
+        this.postName = postName;
+        this.url = url;
+        this.description = description;
+        this.userName = userName;
+        this.subredditName = subredditName;
+        this.voteCount = voteCount;
+        this.commentCount = commentCount;
+        this.duration = duration;
+        this.upVote = upVote;
+        this.downVote = downVote;
+    }
+
     public Long getId() {
         return id;
     }
