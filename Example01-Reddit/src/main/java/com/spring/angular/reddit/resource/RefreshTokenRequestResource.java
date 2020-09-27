@@ -8,9 +8,10 @@ import javax.validation.constraints.NotBlank;
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RefreshTokenRequestResource {
-    @NotBlank
+    @NotBlank(message = "refreshToken cannot be blank")
     private String refreshToken;
 
+    @NotBlank(message = "username cannot be blank")
     private String username;
 
     public RefreshTokenRequestResource() {

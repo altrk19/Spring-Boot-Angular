@@ -2,14 +2,16 @@ package com.spring.angular.reddit.controller.comment;
 
 import com.spring.angular.reddit.model.Comment;
 import com.spring.angular.reddit.model.Post;
-import com.spring.angular.reddit.resource.CommentListResource;
 import com.spring.angular.reddit.resource.CommentResource;
+import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
+@Component
 public class CommentConverter {
-    public static Comment toEntity(CommentResource commentResource){
+    public Comment toEntity(CommentResource commentResource) {
         Comment comment = new Comment();
         comment.setCreatedDate(commentResource.getCreatedDate());
         comment.setText(commentResource.getText());
@@ -21,7 +23,7 @@ public class CommentConverter {
         return comment;
     }
 
-    public static CommentResource toResource(Comment comment){
+    public CommentResource toResource(Comment comment) {
         return CommentResource.builder()
                 .id(comment.getId())
                 .postId(comment.getPost().getPostId())
@@ -31,9 +33,8 @@ public class CommentConverter {
                 .build();
     }
 
-    public static CommentListResource toResourceList(List<Comment> commentList){
-        CommentListResource commentListResource = new CommentListResource(new ArrayList<>());
-        commentListResource.setComments(commentList);
-        return commentListResource;
+    public List<CommentResource> toResourceList(List<Comment> comments) {
+        return comments.stream().filter(Objects::nonNull).map(this::toResource)
+                .collect(Collectors.toList());
     }
 }

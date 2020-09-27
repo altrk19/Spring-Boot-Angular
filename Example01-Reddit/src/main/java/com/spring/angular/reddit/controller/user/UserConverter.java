@@ -1,28 +1,21 @@
-package com.spring.angular.reddit.utils;
+package com.spring.angular.reddit.controller.user;
 
-import com.spring.angular.reddit.resource.UserRegisterRequestResource;
 import com.spring.angular.reddit.model.User;
+import com.spring.angular.reddit.resource.UserRegisterRequestResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.time.Instant;
 
 @Component
 public class UserConverter {
-    private static PasswordEncoder passwordEncoder;
-    private final PasswordEncoder passwordEncoderAutowired;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserConverter(PasswordEncoder passwordEncoderAutowired) {
-        this.passwordEncoderAutowired = passwordEncoderAutowired;
+    public UserConverter(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @PostConstruct
-    private void init() {
-        passwordEncoder = passwordEncoderAutowired;
-    }
-
-    public static User toUserEntity(UserRegisterRequestResource userRegisterRequestResource){
+    public User toEntity(UserRegisterRequestResource userRegisterRequestResource){
         User user = new User();
         user.setUsername(userRegisterRequestResource.getUsername());
         user.setEmail(userRegisterRequestResource.getEmail());

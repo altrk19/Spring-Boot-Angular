@@ -2,26 +2,19 @@ package com.spring.angular.reddit.service.user;
 
 import com.spring.angular.reddit.constants.CommonConstants;
 import com.spring.angular.reddit.constants.RequestErrorTypes;
-import com.spring.angular.reddit.resource.*;
-import com.spring.angular.reddit.exception.*;
+import com.spring.angular.reddit.exception.ClientException;
+import com.spring.angular.reddit.exception.ServerException;
 import com.spring.angular.reddit.model.User;
 import com.spring.angular.reddit.model.VerificationToken;
 import com.spring.angular.reddit.repository.UserRepository;
 import com.spring.angular.reddit.repository.VerificationTokenRepository;
-import com.spring.angular.reddit.security.JwtProvider;
+import com.spring.angular.reddit.resource.NotificationEmailResource;
 import com.spring.angular.reddit.service.mail.MailService;
-import com.spring.angular.reddit.service.refreshtoken.RefreshTokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -33,22 +26,13 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
     private final MailService mailService;
-    private final AuthenticationManager authenticationManager;
-    private final JwtProvider jwtProvider;
-    private final RefreshTokenService refreshTokenService;
 
     public UserServiceImpl(UserRepository userRepository,
                            VerificationTokenRepository verificationTokenRepository,
-                           MailService mailService,
-                           AuthenticationManager authenticationManager,
-                           JwtProvider jwtProvider,
-                           RefreshTokenService refreshTokenService) {
+                           MailService mailService) {
         this.userRepository = userRepository;
         this.verificationTokenRepository = verificationTokenRepository;
         this.mailService = mailService;
-        this.authenticationManager = authenticationManager;
-        this.jwtProvider = jwtProvider;
-        this.refreshTokenService = refreshTokenService;
     }
 
     @Override
@@ -82,42 +66,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public LoginResponseResource login(LoginRequestResource loginRequestResource) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequestResource.getUsername(), loginRequestResource.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtProvider.generateToken(authentication);
-
-        return LoginResponseResource.builder()
-                .authenticationToken(token)
-                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
-                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
-                .username(loginRequestResource.getUsername())
-                .build();
-    }
-
-    @Override
-    public User getCurrentUser() throws ServerException {
-        org.springframework.security.core.userdetails.User user =
-                (org.springframework.security.core.userdetails.User) SecurityContextHolder.
-                        getContext().getAuthentication().getPrincipal();
-        return userRepository.findByUsername(user.getUsername()).orElseThrow(
+    public User getSingleUserByUsername(String username) throws ServerException {
+        return userRepository.findByUsername(username).orElseThrow(
                 () -> new ServerException(RequestErrorTypes.UNKNOWN_RESOURCE,
-                        new String[]{CommonConstants.USERNAME, user.getUsername()}, HttpStatus.NOT_FOUND));
-    }
-
-    @Override
-    public boolean isLoggedIn() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
-    }
-
-    @Override
-    public User getUserByUsername(String username) throws ServerException {
-        return userRepository.findByUsername(username)
-                .orElseThrow(
-                        () -> new ServerException(RequestErrorTypes.UNKNOWN_RESOURCE,
-                                new String[]{CommonConstants.USERNAME, username}, HttpStatus.NOT_FOUND));
+                        new String[]{CommonConstants.USERNAME, username}, HttpStatus.NOT_FOUND));
     }
 
     private String generateVerificationToken(User user) {
@@ -149,6 +101,5 @@ public class UserServiceImpl implements UserService {
                     new String[]{CommonConstants.REGISTERED_EMAIL_ERROR, HttpStatus.FORBIDDEN.toString()},
                     HttpStatus.FORBIDDEN);
         }
-
     }
 }

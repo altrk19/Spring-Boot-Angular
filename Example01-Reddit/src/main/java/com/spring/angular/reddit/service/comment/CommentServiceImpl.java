@@ -7,6 +7,7 @@ import com.spring.angular.reddit.model.Comment;
 import com.spring.angular.reddit.model.Post;
 import com.spring.angular.reddit.model.User;
 import com.spring.angular.reddit.repository.CommentRepository;
+import com.spring.angular.reddit.service.auth.AuthenticationService;
 import com.spring.angular.reddit.service.mail.MailContentBuilder;
 import com.spring.angular.reddit.service.mail.MailService;
 import com.spring.angular.reddit.service.post.PostService;
@@ -18,16 +19,20 @@ import java.util.List;
 @Service
 public class CommentServiceImpl implements CommentService {
     private final UserService userService;
+    private final AuthenticationService authenticationService;
     private final PostService postService;
     private final CommentRepository commentRepository;
     private final MailContentBuilder mailContentBuilder;
     private final MailService mailService;
 
-    public CommentServiceImpl(UserService userService, PostService postService,
+    public CommentServiceImpl(UserService userService,
+                              AuthenticationService authenticationService,
+                              PostService postService,
                               CommentRepository commentRepository,
                               MailContentBuilder mailContentBuilder,
                               MailService mailService) {
         this.userService = userService;
+        this.authenticationService = authenticationService;
         this.postService = postService;
         this.commentRepository = commentRepository;
         this.mailContentBuilder = mailContentBuilder;
@@ -37,7 +42,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void saveComment(Comment comment) throws ServerException {
         Post post = postService.getSinglePost(comment.getPost().getPostId());
-        User currentUser = userService.getCurrentUser();
+        User currentUser = authenticationService.getCurrentUser();
 
         //bidirectional
         post.getComments().add(comment);
@@ -56,7 +61,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<Comment> getAllCommentsForUser(String userName) throws ServerException {
-        User user = userService.getUserByUsername(userName);
+        User user = authenticationService.getUserByUsername(userName);
         return commentRepository.findAllByUser(user);
     }
 

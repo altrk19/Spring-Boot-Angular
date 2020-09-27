@@ -4,10 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.spring.angular.reddit.model.VoteType;
 
+import javax.validation.constraints.NotBlank;
+
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VoteResource {
+    @NotBlank(message = "voteType cannot be blank")
     private VoteType voteType;
+
+    @NotBlank(message = "postId cannot be blank")
     private Long postId;
 
     public VoteResource() {

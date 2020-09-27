@@ -3,13 +3,23 @@ package com.spring.angular.reddit.resource;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import javax.validation.constraints.NotBlank;
+
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PostRequestResource {
     private Long postId;
+
+    @NotBlank(message = "subredditName cannot be blank")
     private String subredditName;
+
+    @NotBlank(message = "postName cannot be blank")
     private String postName;
+
+    @NotBlank(message = "url; cannot be blank")
     private String url;
+
+    @NotBlank(message = "description cannot be blank")
     private String description;
 
     public PostRequestResource() {

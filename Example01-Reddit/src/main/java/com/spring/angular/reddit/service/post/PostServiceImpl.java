@@ -3,9 +3,11 @@ package com.spring.angular.reddit.service.post;
 import com.spring.angular.reddit.constants.CommonConstants;
 import com.spring.angular.reddit.constants.RequestErrorTypes;
 import com.spring.angular.reddit.exception.ServerException;
-import com.spring.angular.reddit.model.*;
+import com.spring.angular.reddit.model.Post;
+import com.spring.angular.reddit.model.Subreddit;
+import com.spring.angular.reddit.model.User;
 import com.spring.angular.reddit.repository.PostRepository;
-import com.spring.angular.reddit.repository.VoteRepository;
+import com.spring.angular.reddit.service.auth.AuthenticationService;
 import com.spring.angular.reddit.service.subreddit.SubredditService;
 import com.spring.angular.reddit.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -22,15 +23,16 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final SubredditService subredditService;
     private final UserService userService;
-    private final VoteRepository voteRepository;
+    private final AuthenticationService authenticationService;
 
     public PostServiceImpl(PostRepository postRepository,
                            SubredditService subredditService,
-                           UserService userService, VoteRepository voteRepository) {
+                           UserService userService,
+                           AuthenticationService authenticationService) {
         this.postRepository = postRepository;
         this.subredditService = subredditService;
         this.userService = userService;
-        this.voteRepository = voteRepository;
+        this.authenticationService = authenticationService;
     }
 
     @Transactional
@@ -64,17 +66,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getPostsByUsername(String username) throws ServerException {
-        User user = userService.getUserByUsername(username);
+        User user = authenticationService.getUserByUsername(username);
         return postRepository.findByUser(user);
-    }
-
-    private Boolean checkVoteType(Post post, VoteType voteType) throws ServerException {
-        if (userService.isLoggedIn()) {
-            Optional<Vote> voteForPostByUser =
-                    voteRepository.findTopByPostAndUserOrderByVoteIdDesc(post, userService.getCurrentUser());
-            return voteForPostByUser.filter(vote -> vote.getVoteType().equals(voteType)).isPresent();
-        }
-        return false;
     }
 
 //    private PostResponseDto mapToPostDto(Post post) throws ServerException {
