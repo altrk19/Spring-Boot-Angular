@@ -9,7 +9,6 @@ import com.spring.angular.reddit.model.User;
 import com.spring.angular.reddit.repository.PostRepository;
 import com.spring.angular.reddit.service.auth.AuthenticationService;
 import com.spring.angular.reddit.service.subreddit.SubredditService;
-import com.spring.angular.reddit.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,16 +21,13 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final SubredditService subredditService;
-    private final UserService userService;
     private final AuthenticationService authenticationService;
 
     public PostServiceImpl(PostRepository postRepository,
                            SubredditService subredditService,
-                           UserService userService,
                            AuthenticationService authenticationService) {
         this.postRepository = postRepository;
         this.subredditService = subredditService;
-        this.userService = userService;
         this.authenticationService = authenticationService;
     }
 

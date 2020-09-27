@@ -2,7 +2,6 @@ package com.spring.angular.reddit.service.comment;
 
 import com.spring.angular.reddit.exception.ServerException;
 import com.spring.angular.reddit.model.Comment;
-import com.spring.angular.reddit.model.Post;
 
 import java.util.List;
 

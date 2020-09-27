@@ -18,20 +18,17 @@ import java.util.List;
 
 @Service
 public class CommentServiceImpl implements CommentService {
-    private final UserService userService;
     private final AuthenticationService authenticationService;
     private final PostService postService;
     private final CommentRepository commentRepository;
     private final MailContentBuilder mailContentBuilder;
     private final MailService mailService;
 
-    public CommentServiceImpl(UserService userService,
-                              AuthenticationService authenticationService,
+    public CommentServiceImpl(AuthenticationService authenticationService,
                               PostService postService,
                               CommentRepository commentRepository,
                               MailContentBuilder mailContentBuilder,
                               MailService mailService) {
-        this.userService = userService;
         this.authenticationService = authenticationService;
         this.postService = postService;
         this.commentRepository = commentRepository;
