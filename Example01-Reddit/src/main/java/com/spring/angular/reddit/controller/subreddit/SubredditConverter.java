@@ -20,6 +20,7 @@ public class SubredditConverter {
 
     public SubredditResource toResource(Subreddit subreddit) {
         SubredditResource subredditResource = new SubredditResource();
+        subredditResource.setIdentifier(subreddit.getIdentifier());
         subredditResource.setName(subreddit.getName());
         subredditResource.setDescription(subreddit.getDescription());
         subredditResource

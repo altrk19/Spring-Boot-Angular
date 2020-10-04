@@ -35,10 +35,15 @@ public class PostServiceImpl implements PostService {
     @Override
     public void save(Post post) throws ServerException {
         Subreddit subreddit = subredditService.getSingleSubredditByName(post.getSubreddit().getName());
-
-        // bi directonal
+        post.setSubreddit(subreddit);
         subreddit.getPosts().add(post);
+
+        User user = authenticationService.getCurrentUser();
+        user.getPosts().add(post);
+        post.setUser(user);
+
         postRepository.save(post);
+
         log.debug("Post created successfully under subreddit : " + subreddit.getName());
     }
 
@@ -55,8 +60,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPostsBySubreddit(Long subredditId) throws ServerException {
-        Subreddit subreddit = subredditService.getSingleSubreddit(subredditId);
+    public List<Post> getPostsBySubreddit(String subredditIdentifier) throws ServerException {
+        Subreddit subreddit = subredditService.getSingleSubreddit(subredditIdentifier);
         return postRepository.findAllBySubreddit(subreddit);
     }
 

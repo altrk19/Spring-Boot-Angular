@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -36,7 +38,8 @@ public class Post {
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
 
-    private Instant createdDate;
+    @CreatedDate
+    protected LocalDateTime createdDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "subreddit_id")
@@ -47,6 +50,11 @@ public class Post {
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Vote> votes;
+
+    @PrePersist
+    public void onCreate() {
+        this.createdDate = LocalDateTime.now();
+    }
 
     @Override
     public String toString() {

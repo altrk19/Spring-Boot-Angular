@@ -21,6 +21,9 @@ public class Subreddit {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
+    @NotBlank(message = "{identifier_can_not_be_blank}")
+    private String identifier;
+
     @NotBlank(message = "Community name is required")
     private String name;
 

@@ -45,20 +45,20 @@ public class SubredditController {
         return ResponseEntity.status(HttpStatus.CREATED).body(subredditResourceSaved);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<SubredditResource> getSingleSubreddit(@PathVariable @NotNull final Long id) throws ServerException {
-        log.info("Request received to get single subreddit with subredditId {}", id);
-        Subreddit subreddit = subredditService.getSingleSubreddit(id);
+    @GetMapping("/{identifier}")
+    public ResponseEntity<SubredditResource> getSingleSubreddit(@PathVariable @NotNull final String identifier) throws ServerException {
+        log.info("Request received to get single subreddit with subredditId {}", identifier);
+        Subreddit subreddit = subredditService.getSingleSubreddit(identifier);
         SubredditResource subredditResource = subredditConverter.toResource(subreddit);
-        log.info("Request completed to get single subreddit with subredditId {}", id);
+        log.info("Request completed to get single subreddit with subredditId {}", identifier);
         return ResponseEntity.status(HttpStatus.OK).body(subredditResource);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSubreddit(@PathVariable @NotNull final Long id) {
-        log.info("Request received to delete subreddit with subredditId {}", id);
-        subredditService.deleteSubreddit(id);
-        log.info("Request completed to delete subreddit with subredditId {}", id);
+    @DeleteMapping("/{identifier}")
+    public ResponseEntity<Void> deleteSubreddit(@PathVariable @NotNull final String identifier) throws ServerException {
+        log.info("Request received to delete subreddit with subredditId {}", identifier);
+        subredditService.deleteSubreddit(identifier);
+        log.info("Request completed to delete subreddit with subredditId {}", identifier);
         return ResponseEntity.noContent().build();
     }
 }

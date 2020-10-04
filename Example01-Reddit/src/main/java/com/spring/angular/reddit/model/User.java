@@ -3,12 +3,13 @@ package com.spring.angular.reddit.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -34,12 +35,16 @@ public class User {
     @Column(unique = true)
     private String email;
 
-    private Instant created;
+    @CreatedDate
+    protected LocalDateTime createdDate;
 
     private boolean enabled;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Subreddit> subreddits;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Post> posts;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> comments;
@@ -51,6 +56,11 @@ public class User {
     @JoinColumn(name = "refresh_token_id")
     private RefreshToken refreshToken;
 
+    @PrePersist
+    public void onCreate() {
+        this.createdDate = LocalDateTime.now();
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -58,7 +68,7 @@ public class User {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
-                ", created=" + created +
+                ", created=" + createdDate +
                 ", enabled=" + enabled +
                 '}';
     }

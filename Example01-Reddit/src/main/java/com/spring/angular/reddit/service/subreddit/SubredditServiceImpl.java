@@ -7,6 +7,7 @@ import com.spring.angular.reddit.exception.ServerException;
 import com.spring.angular.reddit.model.Subreddit;
 import com.spring.angular.reddit.repository.SubredditRepository;
 import com.spring.angular.reddit.service.auth.AuthenticationService;
+import com.spring.angular.reddit.util.KeyGenerationUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ public class SubredditServiceImpl implements SubredditService {
         checkSubredditIsDuplicate(subreddit.getName());
 
         subreddit.setUser(authenticationService.getCurrentUser());
+        subreddit.setIdentifier(KeyGenerationUtil.generateUniqueIdentifier());
         return subredditRepository.save(subreddit);
     }
 
@@ -52,10 +54,10 @@ public class SubredditServiceImpl implements SubredditService {
     }
 
     @Override
-    public Subreddit getSingleSubreddit(Long id) throws ServerException {
-        return subredditRepository.findById(id).orElseThrow(
+    public Subreddit getSingleSubreddit(String identifier) throws ServerException {
+        return subredditRepository.findByIdentifier(identifier).orElseThrow(
                 () -> new ServerException(RequestErrorTypes.UNKNOWN_RESOURCE,
-                        new String[]{CommonConstants.SUB_REDDIT, String.valueOf(String.valueOf(id))},
+                        new String[]{CommonConstants.SUB_REDDIT, String.valueOf(String.valueOf(identifier))},
                         HttpStatus.NOT_FOUND));
     }
 
@@ -68,7 +70,8 @@ public class SubredditServiceImpl implements SubredditService {
     }
 
     @Override
-    public void deleteSubreddit(Long id) {
-        subredditRepository.deleteById(id);
+    public void deleteSubreddit(String identifier) throws ServerException {
+        Subreddit subreddit = getSingleSubreddit(identifier);
+        subredditRepository.deleteById(subreddit.getId());
     }
 }

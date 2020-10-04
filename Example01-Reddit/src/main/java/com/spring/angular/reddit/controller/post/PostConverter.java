@@ -10,6 +10,7 @@ import com.spring.angular.reddit.service.comment.CommentService;
 import com.spring.angular.reddit.service.vote.VoteService;
 import org.springframework.stereotype.Component;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class PostConverter {
                 .userName(post.getUser().getUsername())
                 .subredditName(post.getSubreddit().getName())
                 .commentCount(commentCount)
-                .duration(String.valueOf(post.getCreatedDate().toEpochMilli()))
+                .createdDate(post.getCreatedDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
                 .upVote(VoteType.UPVOTE.equals(voteType))
                 .downVote(VoteType.DOWNVOTE.equals(voteType))
                 .voteCount(post.getVoteCount())

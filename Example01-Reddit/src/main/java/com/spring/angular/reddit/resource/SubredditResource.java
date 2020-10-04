@@ -3,7 +3,8 @@ package com.spring.angular.reddit.resource;
 import javax.validation.constraints.NotBlank;
 
 public class SubredditResource extends DtoBase{
-    private Long id;
+
+    private String identifier;
 
     @NotBlank(message = "name cannot be blank")
     private String name;
@@ -18,24 +19,24 @@ public class SubredditResource extends DtoBase{
     public SubredditResource() {
     }
 
-    public SubredditResource(Long id,
+    public SubredditResource(String identifier,
                              @NotBlank(message = "name cannot be blank") String name,
                              @NotBlank(
                                      message = "description cannot be blank") String description,
                              Integer numberOfPosts, Long createdDate) {
-        this.id = id;
+        this.identifier = identifier;
         this.name = name;
         this.description = description;
         this.numberOfPosts = numberOfPosts;
         this.createdDate = createdDate;
     }
 
-    public Long getId() {
-        return id;
+    public String getIdentifier() {
+        return identifier;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public String getName() {

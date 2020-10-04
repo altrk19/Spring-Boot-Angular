@@ -11,9 +11,9 @@ public interface SubredditService {
 
     List<Subreddit> getAllSubreddits();
 
-    Subreddit getSingleSubreddit(Long id) throws ServerException;
+    Subreddit getSingleSubreddit(String identifier) throws ServerException;
 
     Subreddit getSingleSubredditByName(String name) throws ServerException;
 
-    void deleteSubreddit(Long id);
+    void deleteSubreddit(String identifier) throws ServerException;
 }

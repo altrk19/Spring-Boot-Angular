@@ -67,12 +67,12 @@ public class PostController {
         return status(HttpStatus.OK).body(postResponseResource);
     }
 
-    @GetMapping("/by-subreddit/{id}")
-    public ResponseEntity<List<PostResponseResource>> getAllPostsBySubreddit(Long id) throws ServerException {
-        log.info("Request received to get all posts for subreddit with subredditId {}", id);
-        List<Post> posts = postService.getPostsBySubreddit(id);
+    @GetMapping("/by-subreddit/{identifier}")
+    public ResponseEntity<List<PostResponseResource>> getAllPostsBySubreddit(String identifier) throws ServerException {
+        log.info("Request received to get all posts for subreddit with subredditId {}", identifier);
+        List<Post> posts = postService.getPostsBySubreddit(identifier);
         List<PostResponseResource> postResponseResources = postConverter.toResourceList(posts);
-        log.info("Request completed to get all posts for subreddit with subredditId {}", id);
+        log.info("Request completed to get all posts for subreddit with subredditId {}", identifier);
         return status(HttpStatus.OK).body(postResponseResources);
     }
 

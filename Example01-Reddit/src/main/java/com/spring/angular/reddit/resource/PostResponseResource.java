@@ -12,7 +12,7 @@ public class PostResponseResource extends DtoBase{
     private String subredditName;
     private Integer voteCount;
     private Integer commentCount;
-    private String duration;
+    private Long createdDate;
     private Boolean upVote;
     private Boolean downVote;
 
@@ -20,7 +20,7 @@ public class PostResponseResource extends DtoBase{
     }
 
     public PostResponseResource(Long id, String postName, String url, String description, String userName,
-                                String subredditName, Integer voteCount, Integer commentCount, String duration,
+                                String subredditName, Integer voteCount, Integer commentCount, Long createdDate,
                                 Boolean upVote, Boolean downVote) {
         this.id = id;
         this.postName = postName;
@@ -30,7 +30,7 @@ public class PostResponseResource extends DtoBase{
         this.subredditName = subredditName;
         this.voteCount = voteCount;
         this.commentCount = commentCount;
-        this.duration = duration;
+        this.createdDate = createdDate;
         this.upVote = upVote;
         this.downVote = downVote;
     }
@@ -99,12 +99,12 @@ public class PostResponseResource extends DtoBase{
         this.commentCount = commentCount;
     }
 
-    public String getDuration() {
-        return duration;
+    public Long getCreatedDate() {
+        return createdDate;
     }
 
-    public void setDuration(String duration) {
-        this.duration = duration;
+    public void setCreatedDate(Long createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Boolean getUpVote() {

@@ -20,7 +20,6 @@ public class UserConverter {
         user.setUsername(userRegisterResource.getUsername());
         user.setEmail(userRegisterResource.getEmail());
         user.setPassword(passwordEncoder.encode(userRegisterResource.getPassword()));
-        user.setCreated(Instant.now());
         user.setEnabled(false);
         return user;
     }

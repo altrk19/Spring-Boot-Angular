@@ -12,7 +12,7 @@ public interface PostService {
 
     List<Post> getAllPosts();
 
-    List<Post> getPostsBySubreddit(Long subredditId) throws ServerException;
+    List<Post> getPostsBySubreddit(String subredditIdentifier) throws ServerException;
 
     List<Post> getPostsByUsername(String username) throws ServerException;
 }
