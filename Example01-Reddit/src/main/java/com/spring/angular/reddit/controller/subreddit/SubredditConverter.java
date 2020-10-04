@@ -4,6 +4,7 @@ import com.spring.angular.reddit.model.Subreddit;
 import com.spring.angular.reddit.resource.SubredditResource;
 import org.springframework.stereotype.Component;
 
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -19,11 +20,12 @@ public class SubredditConverter {
 
     public SubredditResource toResource(Subreddit subreddit) {
         SubredditResource subredditResource = new SubredditResource();
-        subredditResource.setId(subreddit.getId());
         subredditResource.setName(subreddit.getName());
         subredditResource.setDescription(subreddit.getDescription());
+        subredditResource
+                .setCreatedDate(subreddit.getCreatedDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
 
-        if(Objects.nonNull(subreddit.getPosts())){
+        if (Objects.nonNull(subreddit.getPosts())) {
             subredditResource.setNumberOfPosts(subreddit.getPosts().size());
         }
 

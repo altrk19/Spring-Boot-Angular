@@ -1,6 +1,7 @@
 package com.spring.angular.reddit.resource;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 public class SubredditResource extends DtoBase{
     private Long id;
@@ -13,14 +14,21 @@ public class SubredditResource extends DtoBase{
 
     private Integer numberOfPosts;
 
+    private Long createdDate;
+
     public SubredditResource() {
     }
 
-    public SubredditResource(Long id, String name, String description, Integer numberOfPosts) {
+    public SubredditResource(Long id,
+                             @NotBlank(message = "name cannot be blank") String name,
+                             @NotBlank(
+                                     message = "description cannot be blank") String description,
+                             Integer numberOfPosts, Long createdDate) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.numberOfPosts = numberOfPosts;
+        this.createdDate = createdDate;
     }
 
     public Long getId() {
@@ -53,5 +61,13 @@ public class SubredditResource extends DtoBase{
 
     public void setNumberOfPosts(Integer numberOfPosts) {
         this.numberOfPosts = numberOfPosts;
+    }
+
+    public Long getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Long createdDate) {
+        this.createdDate = createdDate;
     }
 }

@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -30,11 +32,17 @@ public class Subreddit {
     @OneToMany(mappedBy = "subreddit", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Post> posts;
 
-    private Instant createdDate;
+    @CreatedDate
+    private LocalDateTime createdDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @PrePersist
+    public void onCreate() {
+        this.createdDate = LocalDateTime.now();
+    }
 
     @Override
     public String toString() {
