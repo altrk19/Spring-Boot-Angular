@@ -5,19 +5,19 @@ import com.spring.angular.reddit.model.Post;
 import com.spring.angular.reddit.resource.CommentResource;
 import org.springframework.stereotype.Component;
 
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
 public class CommentConverter {
-    public Comment toEntity(CommentResource commentResource) {
+    public Comment toEntity(CommentResource commentResource, String postIdentifier) {
         Comment comment = new Comment();
-        comment.setCreatedDate(commentResource.getCreatedDate());
         comment.setText(commentResource.getText());
 
         Post post = new Post();
-        post.setPostId(commentResource.getPostId());
+        post.setIdentifier(postIdentifier);
         comment.setPost(post);
 
         return comment;
@@ -25,9 +25,9 @@ public class CommentConverter {
 
     public CommentResource toResource(Comment comment) {
         return CommentResource.builder()
-                .id(comment.getId())
-                .postId(comment.getPost().getPostId())
-                .createdDate(comment.getCreatedDate())
+                .identifier(comment.getIdentifier())
+                .postIdentifier(comment.getPost().getIdentifier())
+                .createdDate(comment.getCreatedDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
                 .text(comment.getText())
                 .userName(comment.getUser().getUsername())
                 .build();

@@ -6,10 +6,13 @@ import com.spring.angular.reddit.model.Comment;
 import java.util.List;
 
 public interface CommentService {
-    void saveComment(Comment comment) throws ServerException;
+    Comment saveComment(Comment comment) throws ServerException;
 
     List<Comment> getAllCommentsForPost(String postIdentifier) throws ServerException;
 
     List<Comment> getAllCommentsForUser(String userName) throws ServerException;
 
+    Comment getSingleComment(String identifier) throws ServerException;
+
+    void deleteSingleComment(String identifier) throws ServerException;
 }

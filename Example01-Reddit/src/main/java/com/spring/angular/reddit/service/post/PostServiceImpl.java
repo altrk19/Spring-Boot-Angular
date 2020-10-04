@@ -35,6 +35,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     @Override
     public Post savePost(Post post) throws ServerException {
+        //bidirectional
         Subreddit subreddit = subredditService.getSingleSubredditByName(post.getSubreddit().getName());
 
         post.setIdentifier(KeyGenerationUtil.generateUniqueIdentifier());

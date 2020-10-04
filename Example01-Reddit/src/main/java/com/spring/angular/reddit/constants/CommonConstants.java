@@ -2,6 +2,7 @@ package com.spring.angular.reddit.constants;
 
 public class CommonConstants {
     public static final String POST = "Post";
+    public static final String COMMENT = "Comment";
     public static final String USERNAME = "Username";
     public static final String SUB_REDDIT = "Subreddit";
     public static final String ACTIVATION_MAIL_FAILED = "Something went wrong while sending activation mail";

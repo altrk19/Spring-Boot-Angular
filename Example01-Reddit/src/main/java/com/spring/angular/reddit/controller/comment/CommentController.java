@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -44,15 +45,37 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(commentResources);
     }
 
-    @PostMapping
-    public ResponseEntity<Void> addComment(@RequestBody CommentResource commentResource) throws ServerException {
+    @GetMapping("/{identifier}")
+    public ResponseEntity<CommentResource> getSingleComment(@PathVariable String identifier)
+            throws ServerException {
+        log.info("Request received to get single comment with id {}", identifier);
+        Comment comment = commentService.getSingleComment(identifier);
+        CommentResource commentResources = commentConverter.toResource(comment);
+        log.info("Request completed to get single comment with id {}", identifier);
+        return ResponseEntity.status(HttpStatus.OK).body(commentResources);
+    }
+
+    @PostMapping("/{postIdentifier}")
+    public ResponseEntity<CommentResource> addComment(@PathVariable @NotNull final String postIdentifier,
+                                                      @RequestBody CommentResource commentResource)
+            throws ServerException {
         log.info("Request received to add comment with username: {} and post Id {}", commentResource.getUserName(),
-                commentResource.getPostId());
-        commentService.saveComment(commentConverter.toEntity(commentResource));
+                postIdentifier);
+        Comment comment = commentService.saveComment(commentConverter.toEntity(commentResource, postIdentifier));
+        CommentResource commentResourceSaved = commentConverter.toResource(comment);
 
         log.info("Request completed to add comment with username: {} and post Id {}", commentResource.getUserName(),
-                commentResource.getPostId());
-        return new ResponseEntity<>(HttpStatus.CREATED);
+                postIdentifier);
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentResourceSaved);
+    }
+
+    @DeleteMapping("/{identifier}")
+    public ResponseEntity<Void> deleteSingleComment(@PathVariable String identifier)
+            throws ServerException {
+        log.info("Request received to delete single comment with id {}", identifier);
+        commentService.deleteSingleComment(identifier);
+        log.info("Request completed to delete single comment with id {}", identifier);
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -7,12 +7,11 @@ import java.time.Instant;
 
 @Builder
 public class CommentResource extends DtoBase {
-    private Long id;
+    private String identifier;
 
-    @NotBlank(message = "postId cannot be blank")
-    private Long postId;
+    private String postIdentifier;
 
-    private Instant createdDate;
+    private Long createdDate;
 
     @NotBlank(message = "text cannot be blank")
     private String text;
@@ -22,35 +21,28 @@ public class CommentResource extends DtoBase {
     public CommentResource() {
     }
 
-    public CommentResource(Long id, Long postId, Instant createdDate, String text, String userName) {
-        this.id = id;
-        this.postId = postId;
+    public CommentResource(String identifier, String postIdentifier, Long createdDate,
+                           @NotBlank(message = "text cannot be blank") String text, String userName) {
+        this.identifier = identifier;
+        this.postIdentifier = postIdentifier;
         this.createdDate = createdDate;
         this.text = text;
         this.userName = userName;
     }
 
-    public Long getId() {
-        return id;
+    public String getIdentifier() {
+        return identifier;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
-    public Long getPostId() {
-        return postId;
-    }
-
-    public void setPostId(Long postId) {
-        this.postId = postId;
-    }
-
-    public Instant getCreatedDate() {
+    public Long getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Instant createdDate) {
+    public void setCreatedDate(Long createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -68,5 +60,13 @@ public class CommentResource extends DtoBase {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getPostIdentifier() {
+        return postIdentifier;
+    }
+
+    public void setPostIdentifier(String postIdentifier) {
+        this.postIdentifier = postIdentifier;
     }
 }

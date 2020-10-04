@@ -5,8 +5,6 @@ import com.spring.angular.reddit.resource.UserRegisterResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
-
 @Component
 public class UserConverter {
     private final PasswordEncoder passwordEncoder;
