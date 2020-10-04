@@ -1,5 +1,6 @@
 package com.spring.angular.reddit.controller.subreddit;
 
+import com.spring.angular.reddit.exception.ClientException;
 import com.spring.angular.reddit.exception.ServerException;
 import com.spring.angular.reddit.model.Subreddit;
 import com.spring.angular.reddit.resource.SubredditResource;
@@ -35,7 +36,7 @@ public class SubredditController {
 
     @PostMapping
     public ResponseEntity<SubredditResource> createSubreddit(@RequestBody SubredditResource subredditResource)
-            throws ServerException {
+            throws ServerException, ClientException {
         log.info("Request received to create subreddit with subredditName {}", subredditResource.getName());
         Subreddit subredditSaved = subredditService.saveSubreddit(subredditConverter.toEntity(subredditResource));
         SubredditResource subredditResourceSaved = subredditConverter.toResource(subredditSaved);

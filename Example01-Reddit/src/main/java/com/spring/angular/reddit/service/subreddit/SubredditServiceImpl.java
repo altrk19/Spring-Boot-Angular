@@ -2,18 +2,21 @@ package com.spring.angular.reddit.service.subreddit;
 
 import com.spring.angular.reddit.constants.CommonConstants;
 import com.spring.angular.reddit.constants.RequestErrorTypes;
+import com.spring.angular.reddit.exception.ClientException;
 import com.spring.angular.reddit.exception.ServerException;
 import com.spring.angular.reddit.model.Subreddit;
-import com.spring.angular.reddit.model.User;
 import com.spring.angular.reddit.repository.SubredditRepository;
 import com.spring.angular.reddit.service.auth.AuthenticationService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
+@Slf4j
 public class SubredditServiceImpl implements SubredditService {
     private final SubredditRepository subredditRepository;
     private final AuthenticationService authenticationService;
@@ -31,9 +34,21 @@ public class SubredditServiceImpl implements SubredditService {
 
     @Override
     @Transactional
-    public Subreddit saveSubreddit(Subreddit subreddit) throws ServerException {
+    public Subreddit saveSubreddit(Subreddit subreddit) throws ServerException, ClientException {
+        checkSubredditIsDuplicate(subreddit.getName());
+
         subreddit.setUser(authenticationService.getCurrentUser());
         return subredditRepository.save(subreddit);
+    }
+
+    private void checkSubredditIsDuplicate(String subredditName) throws ClientException {
+        Subreddit subreddit = subredditRepository.findByName(subredditName).orElse(null);
+        if (Objects.nonNull(subreddit)) {
+            log.debug("already exist subreddit name : {}", subredditName);
+            throw new ClientException(RequestErrorTypes.GENERIC_POLICY_ERROR,
+                    new String[]{CommonConstants.ALREADY_EXIST_SUBREDDIT, HttpStatus.FORBIDDEN.toString()},
+                    HttpStatus.FORBIDDEN);
+        }
     }
 
     @Override
