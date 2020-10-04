@@ -34,4 +34,23 @@ public class VoteController {
         log.info("Request completed to add vote post with postId {}", postIdentifier);
         return ResponseEntity.status(HttpStatus.CREATED).body(voteResourceAdded);
     }
+
+    @GetMapping("/{identifier}")
+    public ResponseEntity<VoteResource> getSingleVote(@PathVariable @NotNull final String identifier)
+            throws ServerException {
+        log.info("Request received to get vote with id {}", identifier);
+        Vote vote = voteService.getSingleVote(identifier);
+        VoteResource voteResource = voteConverter.toResource(vote);
+        log.info("Request completed to get vote with id {}", identifier);
+        return ResponseEntity.status(HttpStatus.OK).body(voteResource);
+    }
+
+    @DeleteMapping("/{identifier}")
+    public ResponseEntity<Void> deleteVote(@PathVariable @NotNull final String identifier)
+            throws ServerException {
+        log.info("Request received to delete vote with id {}", identifier);
+        voteService.deleteSingleVote(identifier);
+        log.info("Request completed to delete vote with id {}", identifier);
+        return ResponseEntity.noContent().build();
+    }
 }

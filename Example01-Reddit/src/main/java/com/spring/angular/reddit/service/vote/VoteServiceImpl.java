@@ -37,28 +37,20 @@ public class VoteServiceImpl implements VoteService {
     @Override
     @Transactional
     public Vote addVote(Vote vote) throws ServerException, ClientException {
-        vote.setIdentifier(KeyGenerationUtil.generateUniqueIdentifier());
-
-
         Post post = postService.getSinglePost(vote.getPost().getIdentifier());
 
         checkUserAlreadyVoted(vote, post);
 
+        vote.setIdentifier(KeyGenerationUtil.generateUniqueIdentifier());
+
         //bidirectioanal
         vote.setPost(post);
         post.getVotes().add(vote);
+        post.setVoteCount(post.getVoteCount() + 1);
 
         User user = authenticationService.getCurrentUser();
         user.getVotes().add(vote);
         vote.setUser(user);
-
-
-
-        if (VoteType.UPVOTE.equals(vote.getVoteType())) {
-            post.setVoteCount(post.getVoteCount() + 1);
-        } else {
-            post.setVoteCount(post.getVoteCount() - 1);
-        }
 
         voteRepository.save(vote);
 
@@ -67,7 +59,7 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public Vote getVoteForPost(Post post, User currentUser) {
-        return voteRepository.findTopByPostAndUserOrderByVoteIdDesc(post, currentUser).orElse(null);
+        return voteRepository.findByPostAndUser(post, currentUser).orElse(null);
     }
 
     @Override
@@ -81,14 +73,37 @@ public class VoteServiceImpl implements VoteService {
         return null;
     }
 
+    @Override
+    public void deleteSingleVote(String identifier) throws ServerException {
+        Vote vote = getSingleVote(identifier);
+        Post post = vote.getPost();
+        post.setVoteCount(post.getVoteCount() - 1);
+        voteRepository.deleteById(vote.getVoteId());
+    }
+
+    @Override
+    public Vote getSingleVote(String identifier) throws ServerException {
+        return voteRepository.findByIdentifier(identifier).orElseThrow(() -> new ServerException(
+                RequestErrorTypes.UNKNOWN_RESOURCE,
+                new String[]{CommonConstants.VOTE, String.valueOf(String.valueOf(identifier))},
+                HttpStatus.NOT_FOUND));
+    }
+
     private void checkUserAlreadyVoted(Vote vote, Post post) throws ServerException, ClientException {
         Optional<Vote> voteByPostAndUser =
-                voteRepository.findTopByPostAndUserOrderByVoteIdDesc(post, authenticationService.getCurrentUser());
-        if (voteByPostAndUser.isPresent() && voteByPostAndUser.get().getVoteType().equals(vote.getVoteType())) {
-            log.debug("User {} already voted", authenticationService.getCurrentUser());
-            throw new ClientException(RequestErrorTypes.GENERIC_POLICY_ERROR,
-                    new String[]{CommonConstants.USER_ALREADY_VOTED, HttpStatus.FORBIDDEN.toString()},
-                    HttpStatus.FORBIDDEN);
+                voteRepository.findByPostAndUser(post, authenticationService.getCurrentUser());
+        if (voteByPostAndUser.isPresent()) {
+            if (voteByPostAndUser.get().getVoteType().equals(vote.getVoteType())) {
+                log.debug("User {} already voted", authenticationService.getCurrentUser());
+                throw new ClientException(RequestErrorTypes.GENERIC_POLICY_ERROR,
+                        new String[]{CommonConstants.USER_ALREADY_VOTED, HttpStatus.FORBIDDEN.toString()},
+                        HttpStatus.FORBIDDEN);
+            } else {
+                //already exist opposite vote, and we delete this
+                Vote voteExist = voteByPostAndUser.get();
+                deleteSingleVote(voteExist.getIdentifier());
+                post.setVoteCount(post.getVoteCount() - 1);
+            }
         }
     }
 }

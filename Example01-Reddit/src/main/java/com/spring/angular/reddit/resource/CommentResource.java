@@ -3,7 +3,6 @@ package com.spring.angular.reddit.resource;
 import lombok.Builder;
 
 import javax.validation.constraints.NotBlank;
-import java.time.Instant;
 
 @Builder
 public class CommentResource extends DtoBase {

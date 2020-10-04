@@ -10,7 +10,12 @@ import com.spring.angular.reddit.model.VoteType;
 public interface VoteService {
     Vote addVote(Vote vote) throws ServerException, ClientException;
 
+    Vote getSingleVote(String identifier) throws ServerException;
+
+    void deleteSingleVote(String identifier) throws ServerException;
+
     Vote getVoteForPost(Post post, User currentUser);
 
     VoteType getVoteType(Post post) throws ServerException;
+
 }
