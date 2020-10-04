@@ -56,8 +56,8 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Override
     @Transactional
-    public void deleteRefreshToken(String token) {
-        refreshTokenRepository.deleteByToken(token);
+    public void deleteRefreshToken(User user) {
+        refreshTokenRepository.deleteByUser(user);
     }
 
     public void validateRefreshToken(LoginWithRefreshTokenResource loginWithRefreshTokenResource)

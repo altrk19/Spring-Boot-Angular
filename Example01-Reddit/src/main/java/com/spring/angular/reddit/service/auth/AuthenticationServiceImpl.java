@@ -79,11 +79,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void logout(LogoutResource logoutResource) throws ClientException {
-        RefreshToken refreshToken = refreshTokenService.getRefreshTokenByToken(logoutResource.getRefreshToken());
-
-        if (!logoutResource.getUsername().equals(refreshToken.getUser().getUsername())) {
-            throw new ClientException(RequestErrorTypes.INVALID_ACCESS_TOKEN, null, HttpStatus.FORBIDDEN);
-        }
+    public void logout(String username) throws ServerException {
+        User user = userService.getSingleUserByUsername(username);
+        refreshTokenService.deleteRefreshToken(user);
     }
 }

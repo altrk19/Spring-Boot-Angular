@@ -12,7 +12,7 @@ public interface RefreshTokenService {
 
     RefreshToken getRefreshTokenByToken(String token) throws ClientException;
 
-    void deleteRefreshToken(String token);
+    void deleteRefreshToken(User user);
 
     LoginResponseResource loginWithRefreshToken(LoginWithRefreshTokenResource loginWithRefreshTokenResource)
             throws ClientException;

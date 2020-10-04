@@ -54,10 +54,12 @@ public class AuthenticationController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(
-            @Valid @RequestBody LogoutResource logoutResource) throws ClientException {
+            @Valid @RequestBody LogoutResource logoutResource) throws ServerException {
         log.info("Request received to logout with with username {}", logoutResource.getUsername());
-        authenticationService.logout(logoutResource);
-        refreshTokenService.deleteRefreshToken(logoutResource.getRefreshToken());
+
+        String username = logoutResource.getUsername();
+        authenticationService.logout(username);
+
         log.info("Request completed to logout with with username {}", logoutResource.getUsername());
         return ResponseEntity.status(HttpStatus.OK).body("Refresh token deleted successfully");
     }

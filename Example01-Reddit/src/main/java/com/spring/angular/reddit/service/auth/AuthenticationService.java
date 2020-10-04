@@ -16,5 +16,5 @@ public interface AuthenticationService {
 
     User getUserByUsername(String username) throws ServerException;
 
-    void logout(LogoutResource logoutResource) throws ClientException;
+    void logout(String username) throws ServerException;
 }
