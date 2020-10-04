@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -45,7 +46,7 @@ public class SubredditController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SubredditResource> getSingleSubreddit(@PathVariable Long id) throws ServerException {
+    public ResponseEntity<SubredditResource> getSingleSubreddit(@PathVariable @NotNull final Long id) throws ServerException {
         log.info("Request received to get single subreddit with subredditId {}", id);
         Subreddit subreddit = subredditService.getSingleSubreddit(id);
         SubredditResource subredditResource = subredditConverter.toResource(subreddit);
@@ -54,7 +55,7 @@ public class SubredditController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSubreddit(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteSubreddit(@PathVariable @NotNull final Long id) {
         log.info("Request received to delete subreddit with subredditId {}", id);
         subredditService.deleteSubreddit(id);
         log.info("Request completed to delete subreddit with subredditId {}", id);

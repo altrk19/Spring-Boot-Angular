@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/api/user")
@@ -30,14 +31,22 @@ public class UserController {
         log.info("Request received to create user with username {}", userRegisterResource.getUsername());
         userService.signUp(userConverter.toEntity(userRegisterResource));
         log.info("Request completed to create user with username {}", userRegisterResource.getUsername());
-        return ResponseEntity.status(HttpStatus.OK).body("Account Registration Successful");
+        return ResponseEntity.status(HttpStatus.OK).body("User created successfully");
     }
 
     @GetMapping("/userVerification/{token}")
-    public ResponseEntity<String> verifyAccount(@PathVariable String token) throws ServerException, ClientException {
+    public ResponseEntity<String> verifyUser(@PathVariable @NotNull final String token) throws ServerException, ClientException {
         log.info("Request received to verify user");
         userService.verifyUser(token);
         log.info("Request completed to verify user");
-        return ResponseEntity.status(HttpStatus.OK).body("Account activated successfully");
+        return ResponseEntity.status(HttpStatus.OK).body("User activated successfully");
+    }
+
+    @DeleteMapping("/delete/{username}")
+    public ResponseEntity<String> deleteUser(@PathVariable @NotNull final String username) throws ServerException, ClientException {
+        log.info("Request received to delete user");
+        userService.deleteUser(username);
+        log.info("Request completed to delete user");
+        return ResponseEntity.noContent().build();
     }
 }

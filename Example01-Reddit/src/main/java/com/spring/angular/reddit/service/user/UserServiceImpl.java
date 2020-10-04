@@ -56,6 +56,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    public void deleteUser(String username) throws ServerException {
+        //check user is exist
+        User user = getSingleUserByUsername(username);
+        userRepository.delete(user);
+    }
+
+    @Override
+    @Transactional
     public void verifyUser(String token) throws ServerException, ClientException {
         UserActivationToken userActivationToken = verificationTokenRepository.findByToken(token).orElseThrow(
                 () -> new ClientException(RequestErrorTypes.INVALID_ACCESS_TOKEN, null, HttpStatus.FORBIDDEN));

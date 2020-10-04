@@ -25,10 +25,6 @@ public class RefreshToken {
     @CreatedDate
     protected LocalDateTime createdDate;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
     @PrePersist
     public void onCreate() {
         this.createdDate = LocalDateTime.now();

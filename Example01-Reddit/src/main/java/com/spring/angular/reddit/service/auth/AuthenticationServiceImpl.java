@@ -42,13 +42,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         org.springframework.security.core.userdetails.User principal =
                 (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
 
-        User user = userService.getSingleUserByUsername(principal.getUsername());
-
         String token = jwtProvider.generateToken(principal);
 
         return LoginResponseResource.builder()
                 .authenticationToken(token)
-                .refreshToken(refreshTokenService.generateRefreshToken(user).getToken())
+                .refreshToken(refreshTokenService.generateRefreshToken(principal.getUsername()).getToken())
                 .expiresAt(Instant.now().toEpochMilli() + jwtProvider.getJwtExpirationInMillis())
                 .username(loginRequestResource.getUsername())
                 .build();
@@ -75,7 +73,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public void logout(String username) throws ServerException {
-        User user = userService.getSingleUserByUsername(username);
-        refreshTokenService.deleteRefreshToken(user);
+
+        refreshTokenService.deleteRefreshToken(username);
     }
 }

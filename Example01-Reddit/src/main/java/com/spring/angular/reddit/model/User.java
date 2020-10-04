@@ -47,6 +47,10 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Vote> votes;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "refresh_token_id")
+    private RefreshToken refreshToken;
+
     @Override
     public String toString() {
         return "User{" +

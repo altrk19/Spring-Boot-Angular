@@ -1,7 +1,6 @@
 package com.spring.angular.reddit.resource;
 
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
 
 public class SubredditResource extends DtoBase{
     private Long id;

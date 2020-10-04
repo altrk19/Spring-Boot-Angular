@@ -9,6 +9,8 @@ public enum RequestErrorTypes {
 
     INVALID_ACCESS_TOKEN("SVC2003", "Invalid access token"),
 
+    INVALID_REFRESH_TOKEN("SVC2003", "Invalid refresh token"),
+
     EXPIRED_ACCESS_TOKEN("SVC2003", "Expired access token"),
 
     DETAILED_INVALID_INPUT("SVC2004", "Invalid input value for %1 %2: %3"),

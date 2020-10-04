@@ -39,7 +39,8 @@ public class AuthenticationController {
 
     @PostMapping("/refresh/token")
     public ResponseEntity<LoginResponseResource> loginWithRefreshToken(
-            @Valid @RequestBody LoginWithRefreshTokenResource loginWithRefreshTokenResource) throws ClientException {
+            @Valid @RequestBody LoginWithRefreshTokenResource loginWithRefreshTokenResource)
+            throws ClientException, ServerException {
         log.info("Request received to login with refresh token with username {}",
                 loginWithRefreshTokenResource.getUsername());
         LoginResponseResource loginResponseResource =
@@ -56,6 +57,6 @@ public class AuthenticationController {
         authenticationService.logout(username);
 
         log.info("Request completed to logout with with username {}", username);
-        return ResponseEntity.status(HttpStatus.OK).body("Logout success");
+        return ResponseEntity.noContent().build();
     }
 }
