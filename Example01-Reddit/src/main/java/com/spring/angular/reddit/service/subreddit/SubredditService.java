@@ -6,7 +6,7 @@ import com.spring.angular.reddit.model.Subreddit;
 import java.util.List;
 
 public interface SubredditService {
-    Subreddit saveSubreddit(Subreddit subreddit);
+    Subreddit saveSubreddit(Subreddit subreddit) throws ServerException;
 
     List<Subreddit> getAllSubreddits();
 

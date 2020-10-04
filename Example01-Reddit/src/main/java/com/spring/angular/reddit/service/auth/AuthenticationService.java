@@ -1,6 +1,5 @@
 package com.spring.angular.reddit.service.auth;
 
-import com.spring.angular.reddit.exception.ClientException;
 import com.spring.angular.reddit.exception.ServerException;
 import com.spring.angular.reddit.model.User;
 import com.spring.angular.reddit.resource.LoginRequestResource;

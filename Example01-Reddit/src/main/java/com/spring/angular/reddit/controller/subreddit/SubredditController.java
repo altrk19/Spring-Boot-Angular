@@ -34,7 +34,8 @@ public class SubredditController {
     }
 
     @PostMapping
-    public ResponseEntity<SubredditResource> createSubreddit(@RequestBody SubredditResource subredditResource) {
+    public ResponseEntity<SubredditResource> createSubreddit(@RequestBody SubredditResource subredditResource)
+            throws ServerException {
         log.info("Request received to create subreddit with subredditName {}", subredditResource.getName());
         Subreddit subredditSaved = subredditService.saveSubreddit(subredditConverter.toEntity(subredditResource));
         SubredditResource subredditResourceSaved = subredditConverter.toResource(subredditSaved);
