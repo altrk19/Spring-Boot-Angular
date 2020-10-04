@@ -1,7 +1,6 @@
 package com.spring.angular.reddit.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -9,7 +8,6 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,6 +19,9 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
+
+    @NotBlank(message = "{identifier_can_not_be_blank}")
+    private String identifier;
 
     @NotBlank(message = "Post Name cannot be empty or Null")
     private String postName;

@@ -9,6 +9,7 @@ import com.spring.angular.reddit.model.User;
 import com.spring.angular.reddit.repository.PostRepository;
 import com.spring.angular.reddit.service.auth.AuthenticationService;
 import com.spring.angular.reddit.service.subreddit.SubredditService;
+import com.spring.angular.reddit.util.KeyGenerationUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -33,8 +34,11 @@ public class PostServiceImpl implements PostService {
 
     @Transactional
     @Override
-    public void save(Post post) throws ServerException {
+    public Post savePost(Post post) throws ServerException {
         Subreddit subreddit = subredditService.getSingleSubredditByName(post.getSubreddit().getName());
+
+        post.setIdentifier(KeyGenerationUtil.generateUniqueIdentifier());
+
         post.setSubreddit(subreddit);
         subreddit.getPosts().add(post);
 
@@ -45,13 +49,14 @@ public class PostServiceImpl implements PostService {
         postRepository.save(post);
 
         log.debug("Post created successfully under subreddit : " + subreddit.getName());
+        return post;
     }
 
 
     @Override
-    public Post getSinglePost(Long id) throws ServerException {
-        return postRepository.findById(id).orElseThrow(() -> new ServerException(RequestErrorTypes.UNKNOWN_RESOURCE,
-                new String[]{CommonConstants.POST, String.valueOf(String.valueOf(id))}, HttpStatus.NOT_FOUND));
+    public Post getSinglePost(String identifier) throws ServerException {
+        return postRepository.findByIdentifier(identifier).orElseThrow(() -> new ServerException(RequestErrorTypes.UNKNOWN_RESOURCE,
+                new String[]{CommonConstants.POST, String.valueOf(String.valueOf(identifier))}, HttpStatus.NOT_FOUND));
     }
 
     @Override
@@ -60,15 +65,21 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPostsBySubreddit(String subredditIdentifier) throws ServerException {
+    public List<Post> getAllPostsBySubredditIdentifier(String subredditIdentifier) throws ServerException {
         Subreddit subreddit = subredditService.getSingleSubreddit(subredditIdentifier);
         return postRepository.findAllBySubreddit(subreddit);
     }
 
     @Override
-    public List<Post> getPostsByUsername(String username) throws ServerException {
+    public List<Post> getAllPostsByUsername(String username) throws ServerException {
         User user = authenticationService.getUserByUsername(username);
         return postRepository.findByUser(user);
+    }
+
+    @Override
+    public void deleteSinglePost(String identifier) throws ServerException {
+        Post post = getSinglePost(identifier);
+        postRepository.deleteById(post.getPostId());
     }
 
 //    private PostResponseDto mapToPostDto(Post post) throws ServerException {

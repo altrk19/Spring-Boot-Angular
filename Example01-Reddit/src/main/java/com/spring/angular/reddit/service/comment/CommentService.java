@@ -8,7 +8,7 @@ import java.util.List;
 public interface CommentService {
     void saveComment(Comment comment) throws ServerException;
 
-    List<Comment> getAllCommentsForPost(Long postId) throws ServerException;
+    List<Comment> getAllCommentsForPost(String postIdentifier) throws ServerException;
 
     List<Comment> getAllCommentsForUser(String userName) throws ServerException;
 

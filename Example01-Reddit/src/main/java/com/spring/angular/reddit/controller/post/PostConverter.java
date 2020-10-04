@@ -39,7 +39,7 @@ public class PostConverter {
 
     public PostResponseResource toResource(Post post, int commentCount, VoteType voteType) {
         return PostResponseResource.builder()
-                .id(post.getPostId())
+                .identifier(post.getIdentifier())
                 .postName(post.getPostName())
                 .url(post.getUrl())
                 .description(post.getDescription())
@@ -57,7 +57,7 @@ public class PostConverter {
         List<PostResponseResource> postResponseResourceList = new ArrayList<>();
         if (!posts.isEmpty()) {
             for (Post post : posts) {
-                int commentCount = commentService.getAllCommentsForPost(post.getPostId()).size();
+                int commentCount = commentService.getAllCommentsForPost(post.getIdentifier()).size();
                 VoteType voteType = voteService.getVoteType(post);
 
                 PostResponseResource postResponseResource = toResource(post, commentCount, voteType);

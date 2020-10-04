@@ -37,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void saveComment(Comment comment) throws ServerException {
-        Post post = postService.getSinglePost(comment.getPost().getPostId());
+        Post post = postService.getSinglePost(comment.getPost().getIdentifier());
         User currentUser = authenticationService.getCurrentUser();
 
         //bidirectional
@@ -50,8 +50,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getAllCommentsForPost(Long postId) throws ServerException {
-        Post post = postService.getSinglePost(postId);
+    public List<Comment> getAllCommentsForPost(String postIdentifier) throws ServerException {
+        Post post = postService.getSinglePost(String.valueOf(postIdentifier));
         return commentRepository.findByPost(post);
     }
 

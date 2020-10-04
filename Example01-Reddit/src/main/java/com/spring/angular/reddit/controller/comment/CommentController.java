@@ -24,13 +24,13 @@ public class CommentController {
         this.commentConverter = commentConverter;
     }
 
-    @GetMapping("/by-post/{postId}")
-    public ResponseEntity<List<CommentResource>> getAllCommentsForPost(@PathVariable Long postId)
+    @GetMapping("/by-post/{postIdentifier}")
+    public ResponseEntity<List<CommentResource>> getAllCommentsForPost(@PathVariable String postIdentifier)
             throws ServerException {
-        log.info("Request received to get all comments for post with post Id {}", postId);
-        List<Comment> comments = commentService.getAllCommentsForPost(postId);
+        log.info("Request received to get all comments for post with post Id {}", postIdentifier);
+        List<Comment> comments = commentService.getAllCommentsForPost(postIdentifier);
         List<CommentResource> commentResources = commentConverter.toResourceList(comments);
-        log.info("Request completed to get all comments for post with post Id {}", postId);
+        log.info("Request completed to get all comments for post with post Id {}", postIdentifier);
         return ResponseEntity.status(HttpStatus.OK).body(commentResources);
     }
 

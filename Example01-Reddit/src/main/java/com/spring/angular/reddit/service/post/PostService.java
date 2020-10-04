@@ -6,13 +6,15 @@ import com.spring.angular.reddit.model.Post;
 import java.util.List;
 
 public interface PostService {
-    void save(Post post) throws ServerException;
+    Post savePost(Post post) throws ServerException;
 
-    Post getSinglePost(Long id) throws ServerException;
+    Post getSinglePost(String identifier) throws ServerException;
 
     List<Post> getAllPosts();
 
-    List<Post> getPostsBySubreddit(String subredditIdentifier) throws ServerException;
+    List<Post> getAllPostsBySubredditIdentifier(String subredditIdentifier) throws ServerException;
 
-    List<Post> getPostsByUsername(String username) throws ServerException;
+    List<Post> getAllPostsByUsername(String username) throws ServerException;
+
+    void deleteSinglePost(String identifier) throws ServerException;
 }

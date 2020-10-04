@@ -34,7 +34,7 @@ public class VoteServiceImpl implements VoteService {
     @Override
     @Transactional
     public void addVote(Vote vote) throws ServerException, ClientException {
-        Post post = postService.getSinglePost(vote.getPost().getPostId());
+        Post post = postService.getSinglePost(vote.getPost().getIdentifier());
         Optional<Vote> voteByPostAndUser =
                 voteRepository.findTopByPostAndUserOrderByVoteIdDesc(post, authenticationService.getCurrentUser());
         if (voteByPostAndUser.isPresent() && voteByPostAndUser.get().getVoteType().equals(vote.getVoteType())) {

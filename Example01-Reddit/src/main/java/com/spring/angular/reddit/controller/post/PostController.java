@@ -13,9 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
-
-import static org.springframework.http.ResponseEntity.status;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -41,47 +40,58 @@ public class PostController {
         List<Post> posts = postService.getAllPosts();
         List<PostResponseResource> postResponseResources = postConverter.toResourceList(posts);
         log.info("Request completed to get all posts");
-        return status(HttpStatus.OK).body(postResponseResources);
+        return ResponseEntity.status(HttpStatus.OK).body(postResponseResources);
     }
 
     @PostMapping
-    public ResponseEntity<Void> createPost(@RequestBody PostRequestResource postRequestResource)
+    public ResponseEntity<PostResponseResource> createPost(@RequestBody PostRequestResource postRequestResource)
             throws ServerException {
         log.info("Request received to create post for postId {}", postRequestResource.getPostId());
-        Post post = postConverter.toPostEntity(postRequestResource);
-        postService.save(post);
+        Post postSaved = postService.savePost(postConverter.toPostEntity(postRequestResource));
+        PostResponseResource postResponseResource = postConverter.toResource(postSaved, 0, null);
         log.info("Request completed to create post for postId {}", postRequestResource.getPostId());
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(postResponseResource);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<PostResponseResource> getSinglePost(@PathVariable Long id) throws ServerException {
-        log.info("Request received to get single post for postId {}", id);
-        Post post = postService.getSinglePost(id);
+    @GetMapping("/{identifier}")
+    public ResponseEntity<PostResponseResource> getSinglePost(@PathVariable String identifier) throws ServerException {
+        log.info("Request received to get single post for postId {}", identifier);
+        Post post = postService.getSinglePost(identifier);
 
-        int commentCount = commentService.getAllCommentsForPost(post.getPostId()).size();
+        int commentCount = commentService.getAllCommentsForPost(post.getIdentifier()).size();
         VoteType voteType = voteService.getVoteType(post);
         PostResponseResource postResponseResource = postConverter.toResource(post, commentCount, voteType);
 
-        log.info("Request completed to get single post for postId {}", id);
-        return status(HttpStatus.OK).body(postResponseResource);
+        log.info("Request completed to get single post for postId {}", identifier);
+        return ResponseEntity.status(HttpStatus.OK).body(postResponseResource);
     }
 
-    @GetMapping("/by-subreddit/{identifier}")
-    public ResponseEntity<List<PostResponseResource>> getAllPostsBySubreddit(String identifier) throws ServerException {
-        log.info("Request received to get all posts for subreddit with subredditId {}", identifier);
-        List<Post> posts = postService.getPostsBySubreddit(identifier);
+    @GetMapping("/by-subreddit/{subredditIdentifier}")
+    public ResponseEntity<List<PostResponseResource>> getAllPostsBySubredditIdentifier(
+            @PathVariable @NotNull final String subredditIdentifier) throws ServerException {
+        log.info("Request received to get all posts for subreddit with subreddit identifier {}", subredditIdentifier);
+        List<Post> posts = postService.getAllPostsBySubredditIdentifier(subredditIdentifier);
         List<PostResponseResource> postResponseResources = postConverter.toResourceList(posts);
-        log.info("Request completed to get all posts for subreddit with subredditId {}", identifier);
-        return status(HttpStatus.OK).body(postResponseResources);
+        log.info("Request completed to get all posts for subreddit with subredditId {}", subredditIdentifier);
+        return ResponseEntity.status(HttpStatus.OK).body(postResponseResources);
     }
 
-    @GetMapping("/by-user/{name}")
-    public ResponseEntity<List<PostResponseResource>> getAllPostsByUsername(String username) throws ServerException {
+    @GetMapping("/by-user/{username}")
+    public ResponseEntity<List<PostResponseResource>> getAllPostsByUsername(
+            @PathVariable @NotNull final String username) throws ServerException {
         log.info("Request received to get all posts for user with username {}", username);
-        List<Post> posts = postService.getPostsByUsername(username);
+        List<Post> posts = postService.getAllPostsByUsername(username);
         List<PostResponseResource> postResponseResources = postConverter.toResourceList(posts);
         log.info("Request received to get all posts for user with username {}", username);
-        return status(HttpStatus.OK).body(postResponseResources);
+        return ResponseEntity.status(HttpStatus.OK).body(postResponseResources);
+    }
+
+    @DeleteMapping("/{identifier}")
+    public ResponseEntity<Void> deleteSinglePost(@PathVariable String identifier)
+            throws ServerException {
+        log.info("Request received to delete single post for postId {}", identifier);
+        postService.deleteSinglePost(identifier);
+        log.info("Request completed to delete single post for postId {}", identifier);
+        return ResponseEntity.noContent().build();
     }
 }

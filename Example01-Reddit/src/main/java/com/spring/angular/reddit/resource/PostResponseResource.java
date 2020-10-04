@@ -4,7 +4,7 @@ import lombok.Builder;
 
 @Builder
 public class PostResponseResource extends DtoBase{
-    private Long id;
+    private String identifier;
     private String postName;
     private String url;
     private String description;
@@ -19,10 +19,10 @@ public class PostResponseResource extends DtoBase{
     public PostResponseResource() {
     }
 
-    public PostResponseResource(Long id, String postName, String url, String description, String userName,
-                                String subredditName, Integer voteCount, Integer commentCount, Long createdDate,
-                                Boolean upVote, Boolean downVote) {
-        this.id = id;
+    public PostResponseResource(String identifier, String postName, String url, String description,
+                                String userName, String subredditName, Integer voteCount, Integer commentCount,
+                                Long createdDate, Boolean upVote, Boolean downVote) {
+        this.identifier = identifier;
         this.postName = postName;
         this.url = url;
         this.description = description;
@@ -35,12 +35,12 @@ public class PostResponseResource extends DtoBase{
         this.downVote = downVote;
     }
 
-    public Long getId() {
-        return id;
+    public String getIdentifier() {
+        return identifier;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public String getPostName() {
