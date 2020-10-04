@@ -1,17 +1,12 @@
 package com.spring.angular.reddit.service.auth;
 
-import com.spring.angular.reddit.constants.RequestErrorTypes;
-import com.spring.angular.reddit.exception.ClientException;
 import com.spring.angular.reddit.exception.ServerException;
-import com.spring.angular.reddit.model.RefreshToken;
 import com.spring.angular.reddit.model.User;
 import com.spring.angular.reddit.resource.LoginRequestResource;
 import com.spring.angular.reddit.resource.LoginResponseResource;
-import com.spring.angular.reddit.resource.LogoutResource;
 import com.spring.angular.reddit.security.JwtProvider;
 import com.spring.angular.reddit.service.refreshtoken.RefreshTokenService;
 import com.spring.angular.reddit.service.user.UserService;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

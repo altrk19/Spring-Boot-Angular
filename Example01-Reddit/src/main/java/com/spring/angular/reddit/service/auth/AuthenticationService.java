@@ -5,7 +5,6 @@ import com.spring.angular.reddit.exception.ServerException;
 import com.spring.angular.reddit.model.User;
 import com.spring.angular.reddit.resource.LoginRequestResource;
 import com.spring.angular.reddit.resource.LoginResponseResource;
-import com.spring.angular.reddit.resource.LogoutResource;
 
 public interface AuthenticationService {
     LoginResponseResource login(LoginRequestResource loginRequestResource) throws ServerException;
