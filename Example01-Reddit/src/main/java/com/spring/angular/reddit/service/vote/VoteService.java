@@ -8,7 +8,7 @@ import com.spring.angular.reddit.model.Vote;
 import com.spring.angular.reddit.model.VoteType;
 
 public interface VoteService {
-    void addVote(Vote vote) throws ServerException, ClientException;
+    Vote addVote(Vote vote) throws ServerException, ClientException;
 
     Vote getVoteForPost(Post post, User currentUser);
 

@@ -3,9 +3,13 @@ package com.spring.angular.reddit.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import java.time.LocalDateTime;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -18,6 +22,9 @@ public class Vote {
     @GeneratedValue(strategy = IDENTITY)
     private Long voteId;
 
+    @NotBlank(message = "{identifier_can_not_be_blank}")
+    private String identifier;
+
     private VoteType voteType;
 
     @NotNull
@@ -28,6 +35,14 @@ public class Vote {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @CreatedDate
+    private LocalDateTime createdDate;
+
+    @PrePersist
+    public void onCreate() {
+        this.createdDate = LocalDateTime.now();
+    }
 
     @Override
     public String toString() {

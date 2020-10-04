@@ -59,13 +59,11 @@ public class CommentController {
     public ResponseEntity<CommentResource> addComment(@PathVariable @NotNull final String postIdentifier,
                                                       @RequestBody CommentResource commentResource)
             throws ServerException {
-        log.info("Request received to add comment with username: {} and post Id {}", commentResource.getUserName(),
-                postIdentifier);
+        log.info("Request received to add comment post Id {}", postIdentifier);
         Comment comment = commentService.saveComment(commentConverter.toEntity(commentResource, postIdentifier));
         CommentResource commentResourceSaved = commentConverter.toResource(comment);
 
-        log.info("Request completed to add comment with username: {} and post Id {}", commentResource.getUserName(),
-                postIdentifier);
+        log.info("Request completed to add comment post Id {}", postIdentifier);
         return ResponseEntity.status(HttpStatus.CREATED).body(commentResourceSaved);
     }
 

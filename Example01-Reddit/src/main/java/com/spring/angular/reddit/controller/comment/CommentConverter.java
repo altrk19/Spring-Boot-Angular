@@ -29,7 +29,6 @@ public class CommentConverter {
                 .postIdentifier(comment.getPost().getIdentifier())
                 .createdDate(comment.getCreatedDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
                 .text(comment.getText())
-                .userName(comment.getUser().getUsername())
                 .build();
     }
 

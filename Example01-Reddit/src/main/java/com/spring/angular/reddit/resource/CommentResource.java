@@ -16,18 +16,15 @@ public class CommentResource extends DtoBase {
     @NotBlank(message = "text cannot be blank")
     private String text;
 
-    private String userName;
-
     public CommentResource() {
     }
 
     public CommentResource(String identifier, String postIdentifier, Long createdDate,
-                           @NotBlank(message = "text cannot be blank") String text, String userName) {
+                           @NotBlank(message = "text cannot be blank") String text) {
         this.identifier = identifier;
         this.postIdentifier = postIdentifier;
         this.createdDate = createdDate;
         this.text = text;
-        this.userName = userName;
     }
 
     public String getIdentifier() {
@@ -52,14 +49,6 @@ public class CommentResource extends DtoBase {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public String getPostIdentifier() {

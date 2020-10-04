@@ -6,11 +6,11 @@ import com.spring.angular.reddit.model.Vote;
 import com.spring.angular.reddit.resource.VoteResource;
 import com.spring.angular.reddit.service.vote.VoteService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/api/votes")
@@ -24,13 +24,14 @@ public class VoteController {
         this.voteConverter = voteConverter;
     }
 
-    @PostMapping
-    public ResponseEntity<Void> addVote(@RequestBody VoteResource voteResource)
+    @PostMapping("/{postIdentifier}")
+    public ResponseEntity<VoteResource> addVote(@PathVariable @NotNull final String postIdentifier,
+                                        @RequestBody VoteResource voteResource)
             throws ServerException, ClientException {
-        log.info("Request received to add vote post with postId {}", voteResource.getPostId());
-        Vote vote = voteConverter.toEntity(voteResource);
-        voteService.addVote(vote);
-        log.info("Request completed to add vote post with postId {}", voteResource.getPostId());
-        return ResponseEntity.ok().build();
+        log.info("Request received to add vote post with postId {}", postIdentifier);
+        Vote vote = voteService.addVote(voteConverter.toEntity(voteResource, postIdentifier));
+        VoteResource voteResourceAdded = voteConverter.toResource(vote);
+        log.info("Request completed to add vote post with postId {}", postIdentifier);
+        return ResponseEntity.status(HttpStatus.CREATED).body(voteResourceAdded);
     }
 }
