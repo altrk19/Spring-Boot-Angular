@@ -25,6 +25,8 @@ public class Vote {
     @NotBlank(message = "{identifier_can_not_be_blank}")
     private String identifier;
 
+    @Enumerated(value = EnumType.STRING)
+    @NotBlank(message = "{voteType_can_not_be_blank}")
     private VoteType voteType;
 
     @NotNull
