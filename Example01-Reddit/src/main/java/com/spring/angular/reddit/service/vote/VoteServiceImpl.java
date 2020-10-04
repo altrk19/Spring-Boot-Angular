@@ -39,7 +39,11 @@ public class VoteServiceImpl implements VoteService {
     public Vote addVote(Vote vote) throws ServerException, ClientException {
         Post post = postService.getSinglePost(vote.getPost().getIdentifier());
 
-        checkUserAlreadyVoted(vote, post);
+        Vote vote1 = checkUserAlreadyVoted(vote, post);
+        if (Objects.nonNull(vote1)) {
+            voteRepository.save(vote1);
+            return vote1;
+        }
 
         vote.setIdentifier(KeyGenerationUtil.generateUniqueIdentifier());
 
@@ -89,21 +93,24 @@ public class VoteServiceImpl implements VoteService {
                 HttpStatus.NOT_FOUND));
     }
 
-    private void checkUserAlreadyVoted(Vote vote, Post post) throws ServerException, ClientException {
+    private Vote checkUserAlreadyVoted(Vote vote, Post post) throws ServerException, ClientException {
         Optional<Vote> voteByPostAndUser =
                 voteRepository.findByPostAndUser(post, authenticationService.getCurrentUser());
         if (voteByPostAndUser.isPresent()) {
+            Vote vote1 = voteByPostAndUser.get();
             if (voteByPostAndUser.get().getVoteType().equals(vote.getVoteType())) {
                 log.debug("User {} already voted", authenticationService.getCurrentUser());
                 throw new ClientException(RequestErrorTypes.GENERIC_POLICY_ERROR,
                         new String[]{CommonConstants.USER_ALREADY_VOTED, HttpStatus.FORBIDDEN.toString()},
                         HttpStatus.FORBIDDEN);
             } else {
-                //already exist opposite vote, and we delete this
-                Vote voteExist = voteByPostAndUser.get();
-                deleteSingleVote(voteExist.getIdentifier());
-                post.setVoteCount(post.getVoteCount() - 1);
+                log.debug("already exist opposite vote, updating vote");
+                vote1.setVoteType(vote.getVoteType());
+                vote1.setPost(post);
+                post.getVotes().add(vote1);
+                return vote1;
             }
         }
+        return null;
     }
 }
