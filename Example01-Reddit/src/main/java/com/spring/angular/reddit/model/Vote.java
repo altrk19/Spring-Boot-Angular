@@ -20,13 +20,12 @@ import static javax.persistence.GenerationType.IDENTITY;
 public class Vote {
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    private Long voteId;
+    private Long id;
 
     @NotBlank(message = "{identifier_can_not_be_blank}")
     private String identifier;
 
     @Enumerated(value = EnumType.STRING)
-    @NotBlank(message = "{voteType_can_not_be_blank}")
     private VoteType voteType;
 
     @NotNull
@@ -49,7 +48,7 @@ public class Vote {
     @Override
     public String toString() {
         return "Vote{" +
-                "voteId=" + voteId +
+                "voteId=" + id +
                 ", voteType=" + voteType +
                 '}';
     }

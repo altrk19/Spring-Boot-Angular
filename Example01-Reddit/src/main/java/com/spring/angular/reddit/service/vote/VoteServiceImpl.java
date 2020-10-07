@@ -82,7 +82,7 @@ public class VoteServiceImpl implements VoteService {
         Vote vote = getSingleVote(identifier);
         Post post = vote.getPost();
         post.setVoteCount(post.getVoteCount() - 1);
-        voteRepository.deleteById(vote.getVoteId());
+        voteRepository.deleteById(vote.getId());
     }
 
     @Override

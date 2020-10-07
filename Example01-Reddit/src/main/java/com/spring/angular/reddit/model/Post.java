@@ -18,7 +18,7 @@ import java.util.List;
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postId;
+    private Long id;
 
     @NotBlank(message = "{identifier_can_not_be_blank}")
     private String identifier;
@@ -36,7 +36,7 @@ public class Post {
     private int voteCount;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "userId", referencedColumnName = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @CreatedDate
@@ -60,7 +60,7 @@ public class Post {
     @Override
     public String toString() {
         return "Post{" +
-                "postId=" + postId +
+                "postId=" + id +
                 ", postName='" + postName + '\'' +
                 ", url='" + url + '\'' +
                 ", description='" + description + '\'' +

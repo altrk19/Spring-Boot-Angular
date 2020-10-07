@@ -26,7 +26,7 @@ public class VoteController {
 
     @PostMapping("/{postIdentifier}")
     public ResponseEntity<VoteResource> addVote(@PathVariable @NotNull final String postIdentifier,
-                                        @RequestBody VoteResource voteResource)
+                                                @RequestBody VoteResource voteResource)
             throws ServerException, ClientException {
         log.info("Request received to add vote post with postId {}", postIdentifier);
         Vote vote = voteService.addVote(voteConverter.toEntity(voteResource, postIdentifier));

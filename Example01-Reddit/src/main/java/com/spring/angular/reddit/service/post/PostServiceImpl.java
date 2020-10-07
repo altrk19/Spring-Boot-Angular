@@ -80,7 +80,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public void deleteSinglePost(String identifier) throws ServerException {
         Post post = getSinglePost(identifier);
-        postRepository.deleteById(post.getPostId());
+        postRepository.deleteById(post.getId());
     }
 
 //    private PostResponseDto mapToPostDto(Post post) throws ServerException {
