@@ -31,3 +31,49 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+# compiled output
+/angular-reddit/dist
+/angular-reddit/tmp
+/angular-reddit/out-tsc
+# Only exists if Bazel was run
+/angular-reddit/bazel-out
+
+# dependencies
+/angular-reddit/node_modules
+
+# profiling files
+/angular-reddit/chrome-profiler-events*.json
+/angular-reddit/speed-measure-plugin*.json
+
+# IDEs and editors
+/angular-reddit/.idea
+/angular-reddit/.project
+/angular-reddit/.classpath
+/angular-reddit/.c9/
+/angular-reddit/*.launch
+/angular-reddit/.settings/
+/angular-reddit/*.sublime-workspace
+
+# IDE - VSCode
+/angular-reddit/.vscode/*
+/angular-reddit/!.vscode/settings.json
+/angular-reddit/!.vscode/tasks.json
+/angular-reddit/!.vscode/launch.json
+/angular-reddit/!.vscode/extensions.json
+/angular-reddit/.history/*
+
+# misc
+/angular-reddit/.sass-cache
+/angular-reddit/connect.lock
+/angular-reddit/coverage
+/angular-reddit/libpeerconnection.log
+/angular-reddit/npm-debug.log
+/angular-reddit/yarn-error.log
+/angular-reddit/testem.log
+/angular-reddit/typings
+
+# System Files
+/angular-reddit/.DS_Store
+/angular-reddit/Thumbs.db
