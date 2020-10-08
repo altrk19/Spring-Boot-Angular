@@ -6,513 +6,961 @@
 	},
 	"item": [
 		{
-			"name": "01-signUp",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"username\":\"TestUser1\",\r\n    \"email\":\"jovany.dantonio@outree.org\",\r\n    \"password\":\"password1234\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/auth/signUp",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"auth",
-						"signUp"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "02-login",
-			"event": [
+			"name": "Success Cases",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"id": "5a4d15e3-3acb-4880-a04a-d6bac3d75076",
-						"exec": [
-							"var responseData = pm.response.json();\r",
-							"var accessToken = responseData.authenticationToken;\r",
-							"\r",
-							"if(accessToken !== null && accessToken !== undefined){\r",
-							"    pm.globals.set(\"authToken\", accessToken);\r",
-							"}"
-						],
-						"type": "text/javascript"
-					}
+					"name": "auth",
+					"item": [
+						{
+							"name": "01-sign up",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{username}}\",\r\n    \"email\": \"aturk@outree.org\",\r\n    \"password\": \"password1234\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/user/signUp",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"user",
+										"signUp"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "02-verify user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "8f3b7901-ec0e-4a78-bdda-facc1e10240d",
+										"exec": [
+											"var responseData = pm.response.json();\r",
+											"var accessToken = responseData.authenticationToken;\r",
+											"\r",
+											"if(accessToken !== null && accessToken !== undefined){\r",
+											"    pm.globals.set(\"authToken\", accessToken);\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\":\"TestUser1\",\r\n    \"password\":\"password1234\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/user/userVerification/{{token}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"user",
+										"userVerification",
+										"{{token}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "03-login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "5a4d15e3-3acb-4880-a04a-d6bac3d75076",
+										"exec": [
+											"var responseData = pm.response.json();\r",
+											"var accessToken = responseData.authenticationToken;\r",
+											"\r",
+											"if(accessToken !== null && accessToken !== undefined){\r",
+											"    pm.globals.set(\"authToken\", accessToken);\r",
+											"}\r",
+											"\r",
+											"var refreshToken = responseData.refreshToken;\r",
+											"if(refreshToken !== null && refreshToken !== undefined){\r",
+											"    pm.globals.set(\"refreshToken\", refreshToken);\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\":\"{{username}}\",\r\n    \"password\":\"password1234\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/auth/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "04-refresh token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e8e70d2d-d1c2-494e-9938-befc945fbd67",
+										"exec": [
+											"var responseData = pm.response.json();\r",
+											"var accessToken = responseData.authenticationToken;\r",
+											"\r",
+											"if(accessToken !== null && accessToken !== undefined){\r",
+											"    pm.globals.set(\"authToken\", accessToken);\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"refreshToken\": \"{{refreshToken}}\",\r\n    \"username\": \"{{username}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/auth/refresh/token",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"auth",
+										"refresh",
+										"token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "05-logout",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "25e8671e-19f8-48ec-a11a-6fea1775b6f5",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/auth/logout/{{username}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"auth",
+										"logout",
+										"{{username}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "06-delete user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "07a64750-212b-48c5-a61e-432377f21a7b",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/user/delete/{{username}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"user",
+										"delete",
+										"{{username}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "subreddit",
+					"item": [
+						{
+							"name": "01-get all subreddits",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/subreddit",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"subreddit"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "02-create subreddit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "53ecdf65-c557-4c4d-bb62-35380111270c",
+										"exec": [
+											"var responseData = pm.response.json();\r",
+											"var subredditId = responseData.identifier;\r",
+											"\r",
+											"if(subredditId !== null && subredditId !== undefined){\r",
+											"    pm.globals.set(\"subredditId\", subredditId);\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"World\",\r\n    \"description\":\"Description of world ...\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/subreddit",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"subreddit"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "03-get single subreddit",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/subreddit/{{subredditId}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"subreddit",
+										"{{subredditId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "04-delete subreddit",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/subreddit/{{subredditId}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"subreddit",
+										"{{subredditId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "post",
+					"item": [
+						{
+							"name": "01-get all posts",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/posts",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"posts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "02-create post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c3ad3e24-0ef8-4ea2-87d7-fa38c5e69398",
+										"exec": [
+											"var responseData = pm.response.json();\r",
+											"var postId = responseData.identifier;\r",
+											"\r",
+											"if(postId !== null && postId !== undefined){\r",
+											"    pm.globals.set(\"postId\", postId);\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"subredditName\": \"World\",\r\n    \"postName\": \"post name 61\",\r\n    \"url\": \"urlurlurlurlurlurl\",\r\n    \"description\": \"description1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/posts",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"posts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "03-get single post",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/posts/{{postId}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"posts",
+										"{{postId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "04-get all posts by subredditId",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/posts/by-subreddit/{{subredditId}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"posts",
+										"by-subreddit",
+										"{{subredditId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "05-get all posts by username",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/posts/by-user/{{username}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"posts",
+										"by-user",
+										"{{username}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "06-delete single post",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/posts/{{postId}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"posts",
+										"{{postId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "comment",
+					"item": [
+						{
+							"name": "01-get all comments for post",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/comments/by-post/{{postId}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"comments",
+										"by-post",
+										"{{postId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "02-get all comments for user",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/comments/by-user/{{username}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"comments",
+										"by-user",
+										"{{username}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "03-add comment",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "40a176ed-233c-439d-8e3b-bc5ac5e017eb",
+										"exec": [
+											"var responseData = pm.response.json();\r",
+											"var commentId = responseData.identifier;\r",
+											"\r",
+											"if(commentId !== null && commentId !== undefined){\r",
+											"    pm.globals.set(\"commentId\", commentId);\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"text\": \"good job3\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/comments/{{postId}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"comments",
+										"{{postId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "04-get single comment",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/comments/{{commentId}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"comments",
+										"{{commentId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "05-delete single comment",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/comments/{{commentId}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"comments",
+										"{{commentId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "vote",
+					"item": [
+						{
+							"name": "01-add vote",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "1c391215-0f09-4dfc-85af-ec75ec95fec2",
+										"exec": [
+											"var responseData = pm.response.json();\r",
+											"var voteId = responseData.identifier;\r",
+											"\r",
+											"if(voteId !== null && voteId !== undefined){\r",
+											"    pm.globals.set(\"voteId\", voteId);\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"voteType\": \"DOWNVOTE\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/votes/{{postId}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"votes",
+										"{{postId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "02-get single vote",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/votes/{{voteId}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"votes",
+										"{{voteId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "03-delete single vote",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/votes/{{voteId}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"votes",
+										"{{voteId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
 				}
 			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"username\":\"TestUser1\",\r\n    \"password\":\"password1234\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/auth/login",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"auth",
-						"login"
-					]
-				}
-			},
-			"response": []
+			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "03-refresh token",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "e8e70d2d-d1c2-494e-9938-befc945fbd67",
-						"exec": [
-							"var responseData = pm.response.json();\r",
-							"var accessToken = responseData.authenticationToken;\r",
-							"\r",
-							"if(accessToken !== null && accessToken !== undefined){\r",
-							"    pm.globals.set(\"authToken\", accessToken);\r",
-							"}"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"refreshToken\": \"be956c88-437c-49c3-8214-61577dcfbd3e\",\r\n    \"userName\": \"TestUser1\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/auth/refresh/token",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"auth",
-						"refresh",
-						"token"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "04-logout",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "25e8671e-19f8-48ec-a11a-6fea1775b6f5",
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"refreshToken\": \"be956c88-437c-49c3-8214-61577dcfbd3e\",\r\n    \"userName\": \"TestUser1\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/auth/logout",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"auth",
-						"logout"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "05-get all subreddits",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{authToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/api/subreddit",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"subreddit"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "06-create subreddit",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{authToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\":\"subreddit1\",\r\n    \"description\":\"description1\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/subreddit",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"subreddit"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "07-get single subreddit",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{authToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/api/subreddit/1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"subreddit",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "08-get all posts",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{authToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/api/posts",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"posts"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "09-create post",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{authToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"postName\": \"post name 1\",\r\n    \"url\": \"urlurlurlurlurlurl\",\r\n    \"description\": \"description1\",\r\n    \"subredditName\": \"subreddit1\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/posts",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"posts"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "10-get single post",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{authToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/api/posts/1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"posts",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "11-get all comments for post",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{authToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/api/comments/by-post/1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"comments",
-						"by-post",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "12-get all comments for user",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{authToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/api/comments/by-user/TestUser1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"comments",
-						"by-user",
-						"TestUser1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "13-add comment",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{authToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"postId\": 1,\r\n    \"text\": \"good job comment1\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/comments",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"comments"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "14-add vote",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{authToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"voteType\": \"UPVOTE\",\r\n    \"postId\": 1\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/votes",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"votes"
-					]
-				}
-			},
-			"response": []
+			"name": "Fail Cases",
+			"item": [],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"protocolProfileBehavior": {}
