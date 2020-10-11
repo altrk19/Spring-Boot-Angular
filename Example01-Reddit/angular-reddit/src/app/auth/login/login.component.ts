@@ -1,3 +1,4 @@
+import { throwError } from 'rxjs';
 import { AuthService } from './../shared/auth.service';
 import { LoginRequestPayload } from './login-request-payload';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -14,7 +15,6 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loginRequestPayload: LoginRequestPayload;
   registerSuccessMessage: string;
-  isError: boolean;
   constructor(
     private authService: AuthService,
     private activatedRoute: ActivatedRoute,
@@ -46,14 +46,11 @@ export class LoginComponent implements OnInit {
     this.loginRequestPayload.username = this.loginForm.get('username').value;
     this.loginRequestPayload.password = this.loginForm.get('password').value;
 
-    this.authService.login(this.loginRequestPayload).subscribe((data) => {
-      if (data) {
-        this.isError = false;
-        this.router.navigateByUrl('/');
-        this.toastr.success('Login successfull');
-      } else {
-        this.isError = true;
-      }
+    this.authService.login(this.loginRequestPayload).subscribe(data => {
+      this.router.navigateByUrl('');
+      this.toastr.success('Login Successful');
+    }, error => {
+      this.toastr.error('Login Failed');
     });
   }
 }

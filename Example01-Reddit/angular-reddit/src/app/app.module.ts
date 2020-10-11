@@ -6,7 +6,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { SignupComponent } from './auth/signup/signup.component';
-import { TestComponent } from './test/test.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoginComponent } from './auth/login/login.component';
@@ -20,7 +19,6 @@ import { HomeComponent } from './home/home.component';
     AppComponent,
     HeaderComponent,
     SignupComponent,
-    TestComponent,
     LoginComponent,
     HomeComponent,
   ],

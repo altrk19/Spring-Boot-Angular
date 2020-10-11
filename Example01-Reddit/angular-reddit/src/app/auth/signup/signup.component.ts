@@ -45,8 +45,16 @@ export class SignupComponent implements OnInit {
           queryParams: { registered: 'true' },
         });
       },
-      () => {
-        this.toastr.error('Registration Failed! Please try again');
+      (errorData) => {
+        var errorText: string;
+        errorText = errorData.error;
+        if (errorText.includes('Registered username')) {
+          this.toastr.error('Registered username. Please try another one');
+        } else if (errorText.includes('Registered email')) {
+          this.toastr.error('Registered email. Please try another one');
+        } else {
+          this.toastr.error('Registration Failed! Please try again');
+        }
       }
     );
   }
