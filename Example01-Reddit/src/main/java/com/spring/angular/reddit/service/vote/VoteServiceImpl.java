@@ -63,7 +63,7 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public Vote getVoteForPost(Post post, User currentUser) {
-        return voteRepository.findByPostAndUser(post, currentUser).orElse(null);
+        return voteRepository.findByPostIdAndUserId(post.getId(), currentUser.getId()).orElse(null);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class VoteServiceImpl implements VoteService {
 
     private Vote checkUserAlreadyVoted(Vote vote, Post post) throws ServerException, ClientException {
         Optional<Vote> voteByPostAndUser =
-                voteRepository.findByPostAndUser(post, authenticationService.getCurrentUser());
+                voteRepository.findByPostIdAndUserId(post.getId(), authenticationService.getCurrentUser().getId());
         if (voteByPostAndUser.isPresent()) {
             Vote vote1 = voteByPostAndUser.get();
             if (voteByPostAndUser.get().getVoteType().equals(vote.getVoteType())) {

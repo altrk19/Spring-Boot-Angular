@@ -75,7 +75,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<Comment> getAllCommentsForUser(String userName) throws ServerException {
         User user = authenticationService.getUserByUsername(userName);
-        return commentRepository.findAllByUser(user);
+        return commentRepository.findAllByUserId(user.getId());
     }
 
     @Override

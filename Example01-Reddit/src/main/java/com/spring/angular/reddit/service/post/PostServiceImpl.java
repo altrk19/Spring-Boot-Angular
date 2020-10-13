@@ -68,13 +68,13 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> getAllPostsBySubredditIdentifier(String subredditIdentifier) throws ServerException {
         Subreddit subreddit = subredditService.getSingleSubreddit(subredditIdentifier);
-        return postRepository.findAllBySubreddit(subreddit);
+        return postRepository.findAllBySubredditId(subreddit.getId());
     }
 
     @Override
     public List<Post> getAllPostsByUsername(String username) throws ServerException {
         User user = authenticationService.getUserByUsername(username);
-        return postRepository.findByUser(user);
+        return postRepository.findByUserId(user.getId());
     }
 
     @Override

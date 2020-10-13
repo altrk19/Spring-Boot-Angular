@@ -2,6 +2,15 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
 @import "~ngx-toastr/toastr.css";
 
+html{    
+  padding: 0;
+  height: 100%;  
+}
+body{
+  margin-top: 63px;
+  height: 100%; 
+}
+
 input.ng-invalid.ng-touched{
     border: 1px solid red;
 }

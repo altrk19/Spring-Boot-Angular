@@ -13,6 +13,13 @@ import { NgxWebstorageModule } from 'ngx-webstorage';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { HomeComponent } from './home/home.component';
+import { FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import { PostTileComponent } from './shared/post-tile/post-tile.component';
+import { VoteButtonComponent } from './shared/vote-button/vote-button.component';
+import { SideBarComponent } from './shared/side-bar/side-bar.component';
+import { SubredditSideBarComponent } from './shared/subreddit-side-bar/subreddit-side-bar.component';
+import { PostTitleComponent } from './shared/post-title/post-title.component';
+
 
 @NgModule({
   declarations: [
@@ -21,6 +28,11 @@ import { HomeComponent } from './home/home.component';
     SignupComponent,
     LoginComponent,
     HomeComponent,
+    PostTileComponent,
+    VoteButtonComponent,
+    SideBarComponent,
+    SubredditSideBarComponent,
+    PostTitleComponent,
   ],
   imports: [
     BrowserModule,
@@ -30,6 +42,7 @@ import { HomeComponent } from './home/home.component';
     NgxWebstorageModule.forRoot(),
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
+    FontAwesomeModule,
   ],
   providers: [
     {
