@@ -14,11 +14,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { HomeComponent } from './home/home.component';
 import { FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import { PostTileComponent } from './shared/post-tile/post-tile.component';
 import { VoteButtonComponent } from './shared/vote-button/vote-button.component';
 import { SideBarComponent } from './shared/side-bar/side-bar.component';
 import { SubredditSideBarComponent } from './shared/subreddit-side-bar/subreddit-side-bar.component';
 import { PostTitleComponent } from './shared/post-title/post-title.component';
+import { CreateSubredditComponent } from './subreddit/create-subreddit/create-subreddit.component';
+import { CreatePostComponent } from './post/create-post/create-post.component';
+import { ListSubredditsComponent } from './subreddit/list-subreddits/list-subreddits.component';
+import { EditorModule } from '@tinymce/tinymce-angular';
 
 
 @NgModule({
@@ -28,11 +31,13 @@ import { PostTitleComponent } from './shared/post-title/post-title.component';
     SignupComponent,
     LoginComponent,
     HomeComponent,
-    PostTileComponent,
     VoteButtonComponent,
     SideBarComponent,
     SubredditSideBarComponent,
     PostTitleComponent,
+    CreateSubredditComponent,
+    CreatePostComponent,
+    ListSubredditsComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,6 +48,7 @@ import { PostTitleComponent } from './shared/post-title/post-title.component';
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     FontAwesomeModule,
+    EditorModule
   ],
   providers: [
     {

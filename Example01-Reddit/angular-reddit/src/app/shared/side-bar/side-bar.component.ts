@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SideBarComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  goToCreatePost() {
+    this.router.navigateByUrl('/create-post');
+  }
+
+  goToCreateSubreddit() {
+    this.router.navigateByUrl('/create-subreddit');
   }
 
 }

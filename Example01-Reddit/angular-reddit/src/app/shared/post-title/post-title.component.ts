@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { PostModel } from './../post-model';
 import { Component, Input, OnInit } from '@angular/core';
 import { faComments } from '@fortawesome/free-solid-svg-icons';
@@ -9,12 +10,16 @@ import { faComments } from '@fortawesome/free-solid-svg-icons';
 })
 export class PostTitleComponent implements OnInit {
 
-  @Input() data: Array<PostModel>;
   faComments = faComments;
-
-  constructor() { }
+  @Input() posts: PostModel[];
+  
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  goToPost(id: number): void {
+    this.router.navigateByUrl('/view-post/' + id);
   }
 
 }
