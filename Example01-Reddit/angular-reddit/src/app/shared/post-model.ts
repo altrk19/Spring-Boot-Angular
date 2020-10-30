@@ -1,5 +1,5 @@
 export class PostModel {
-    id: number;
+    identifier: number;
     postName: string;
     url: string;
     description: string;
@@ -7,5 +7,4 @@ export class PostModel {
     userName: string;
     subredditName: string;
     commentCount: number;
-    duration: string;
 }

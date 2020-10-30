@@ -7,9 +7,8 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class CommentResource extends DtoBase {
     private String identifier;
-
     private String postIdentifier;
-
+    private String userName;
     private Long createdDate;
 
     @NotBlank(message = "text cannot be blank")
@@ -18,10 +17,11 @@ public class CommentResource extends DtoBase {
     public CommentResource() {
     }
 
-    public CommentResource(String identifier, String postIdentifier, Long createdDate,
+    public CommentResource(String identifier, String postIdentifier, String userName, Long createdDate,
                            @NotBlank(message = "text cannot be blank") String text) {
         this.identifier = identifier;
         this.postIdentifier = postIdentifier;
+        this.userName = userName;
         this.createdDate = createdDate;
         this.text = text;
     }
@@ -56,5 +56,13 @@ public class CommentResource extends DtoBase {
 
     public void setPostIdentifier(String postIdentifier) {
         this.postIdentifier = postIdentifier;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

@@ -43,6 +43,6 @@ export class VoteButtonComponent implements OnInit {
   }
 
   private vote() {
-    this.votePayload.postId = this.post.id;
+    this.votePayload.postId = this.post.identifier;
   }
 }
