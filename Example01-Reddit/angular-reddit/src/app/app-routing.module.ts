@@ -1,3 +1,4 @@
+import { AuthGuard } from './auth/auth.guard';
 import { UserProfileComponent } from './auth/user-profile/user-profile.component';
 import { ViewPostComponent } from './post/view-post/view-post.component';
 import { ListSubredditsComponent } from './subreddit/list-subreddits/list-subreddits.component';
@@ -11,11 +12,11 @@ import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'user-profile/:name', component: UserProfileComponent },
+  { path: 'user-profile/:name', component: UserProfileComponent, canActivate: [AuthGuard] },
   { path: 'view-post/:id', component: ViewPostComponent },
   { path: 'list-subreddits', component: ListSubredditsComponent },
-  { path: 'create-post', component: CreatePostComponent },
-  { path: 'create-subreddit', component: CreateSubredditComponent },
+  { path: 'create-post', component: CreatePostComponent, canActivate: [AuthGuard] },
+  { path: 'create-subreddit', component: CreateSubredditComponent, canActivate: [AuthGuard] },
   { path: 'signup', component: SignupComponent },
   { path: 'login', component: LoginComponent }
 ];

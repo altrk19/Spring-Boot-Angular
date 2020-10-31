@@ -1,3 +1,4 @@
+import { VoteService } from './../vote.service';
 import { throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { PostService } from './../post.service';
@@ -23,12 +24,22 @@ export class VoteButtonComponent implements OnInit {
   isLoggedIn: boolean;
 
   constructor(
+    private voteService: VoteService,
     private authService: AuthService,
     private postService: PostService,
     private toastr: ToastrService
-  ) {}
+  ) {
+    this.votePayload = {
+      voteType: undefined,
+    };
+    this.authService.loggedIn.subscribe(
+      (data: boolean) => (this.isLoggedIn = data)
+    );
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.updateVoteDetails();
+  }
 
   upvotePost() {
     this.votePayload.voteType = VoteType.UPVOTE;
@@ -43,6 +54,20 @@ export class VoteButtonComponent implements OnInit {
   }
 
   private vote() {
-    this.votePayload.postId = this.post.identifier;
+    this.voteService.vote(this.post.identifier, this.votePayload).subscribe(
+      () => {
+        this.updateVoteDetails();
+      },
+      (error) => {
+        this.toastr.error(error.error.message);
+        throwError(error);
+      }
+    );
+  }
+
+  private updateVoteDetails() {
+    this.postService.getPost(this.post.identifier).subscribe((post) => {
+      this.post = post;
+    });
   }
 }
