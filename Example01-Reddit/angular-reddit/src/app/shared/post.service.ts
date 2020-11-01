@@ -13,7 +13,7 @@ export class PostService {
   constructor(private http: HttpClient) {}
 
   getAllPosts(): Observable<Array<PostModel>> {
-    return this.http.get<Array<PostModel>>('http://localhost:8080/şapi/posts');
+    return this.http.get<Array<PostModel>>(this.baseUrl + '/api/posts');
   }
 
   createPost(postPayload: CreatePostPayload): Observable<any> {
