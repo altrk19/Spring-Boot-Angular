@@ -30,7 +30,6 @@ public class Post {
     private String url;
 
     @Nullable
-    @Lob
     private String description;
 
     private int voteCount;
