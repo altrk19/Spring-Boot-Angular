@@ -1,5 +1,6 @@
 package com.spring.angular.reddit.service.user;
 
+import com.spring.angular.reddit.config.AppConfig;
 import com.spring.angular.reddit.constants.CommonConstants;
 import com.spring.angular.reddit.constants.RequestErrorTypes;
 import com.spring.angular.reddit.exception.ClientException;
@@ -23,20 +24,21 @@ import java.util.UUID;
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
-    private static final String MAIL_BODY =
-            "Thank you for signing up to Spring Reddit, \nplease click on the below url to activate your account : http://localhost:8080/api/user/userVerification/";
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
     private final MailService mailService;
     private final JwtProvider jwtProvider;
+    private final AppConfig appConfig;
 
     public UserServiceImpl(UserRepository userRepository,
                            VerificationTokenRepository verificationTokenRepository,
-                           MailService mailService, JwtProvider jwtProvider) {
+                           MailService mailService, JwtProvider jwtProvider,
+                           AppConfig appConfig) {
         this.userRepository = userRepository;
         this.verificationTokenRepository = verificationTokenRepository;
         this.mailService = mailService;
         this.jwtProvider = jwtProvider;
+        this.appConfig = appConfig;
     }
 
     @Override
@@ -50,7 +52,9 @@ public class UserServiceImpl implements UserService {
         NotificationEmailResource notificationEmailResource = new NotificationEmailResource();
         notificationEmailResource.setSubject("Please activate your account");
         notificationEmailResource.setRecipient(user.getEmail());
-        notificationEmailResource.setBody(MAIL_BODY + token);
+        notificationEmailResource.setBody(
+                "Thank you for signing up to Spring Reddit, \nplease click on the below url to activate your account " +
+                        appConfig.getUrl() + "/api/user/userVerification/" + token);
         mailService.sendMail(notificationEmailResource);
     }
 
