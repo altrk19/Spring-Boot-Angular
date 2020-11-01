@@ -37,9 +37,6 @@ public class MailService {
             mailSender.send(messagePreparator);
             log.info("mail sent");
         }catch (MailException e){
-            log.debug("mailSender:"+mailSender.toString());
-            log.debug("notificationEmailResource:"+notificationEmailResource);
-            log.debug("mailContentBuilder:"+mailContentBuilder);
             log.debug("Exception occurred while sending activation mail", e);
             throw new ServerException(RequestErrorTypes.GENERIC_SERVICE_ERROR,new String[]{CommonConstants.ACTIVATION_MAIL_FAILED,
                     HttpStatus.SERVICE_UNAVAILABLE.toString()}, HttpStatus.SERVICE_UNAVAILABLE);
