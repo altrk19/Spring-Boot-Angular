@@ -1,25 +1,36 @@
+import { environment } from './../../environments/environment';
 import { Observable } from 'rxjs';
 import { CommentPayload } from './comment-payload';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CommentService {
+  baseUrl = environment.baseUrl;
 
-  constructor(private httpClient: HttpClient) { 
-  }
+  constructor(private httpClient: HttpClient) {}
 
   getAllCommentsForPost(postId: number): Observable<CommentPayload[]> {
-    return this.httpClient.get<CommentPayload[]>('http://localhost:8080/api/comments/by-post/' + postId);
+    return this.httpClient.get<CommentPayload[]>(
+      this.baseUrl + '/api/comments/by-post/' + postId
+    );
   }
 
-  postComment(postId: number, commentPayload: CommentPayload): Observable<CommentPayload> {
-    return this.httpClient.post<CommentPayload>('http://localhost:8080/api/comments/' + postId, commentPayload);
+  postComment(
+    postId: number,
+    commentPayload: CommentPayload
+  ): Observable<CommentPayload> {
+    return this.httpClient.post<CommentPayload>(
+      this.baseUrl + '/api/comments/' + postId,
+      commentPayload
+    );
   }
 
   getAllCommentsByUser(name: string) {
-    return this.httpClient.get<CommentPayload[]>('http://localhost:8080/api/comments/by-user/' + name);
+    return this.httpClient.get<CommentPayload[]>(
+      this.baseUrl + '/api/comments/by-user/' + name
+    );
   }
 }

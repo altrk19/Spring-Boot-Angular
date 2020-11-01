@@ -1,3 +1,4 @@
+import { environment } from './../../../environments/environment';
 import { LoginResponse } from './../login/login-response-payload';
 import { LoginRequestPayload } from './../login/login-request-payload';
 import { SignupRequestPayload } from './../signup/signup-request-payload';
@@ -11,6 +12,8 @@ import { map, tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class AuthService {
+  baseUrl = environment.baseUrl;
+
   @Output() loggedIn: EventEmitter<boolean> = new EventEmitter();
   @Output() username: EventEmitter<string> = new EventEmitter();
 
@@ -26,7 +29,7 @@ export class AuthService {
 
   signup(signupRequestPayload: SignupRequestPayload): Observable<any> {
     return this.httpClient.post(
-      'http://localhost:8080/api/user/signUp',
+      this.baseUrl + '/api/user/signUp',
       signupRequestPayload,
       { responseType: 'text' }
     );
@@ -35,7 +38,7 @@ export class AuthService {
   login(loginRequestPayload: LoginRequestPayload): Observable<boolean> {
     return this.httpClient
       .post<LoginResponse>(
-        'http://localhost:8080/api/auth/login',
+        this.baseUrl + '/api/auth/login',
         loginRequestPayload
       )
       .pipe(
@@ -58,7 +61,7 @@ export class AuthService {
 
   logout(userName: string) {
     this.httpClient
-      .delete('http://localhost:8080/api/auth/logout/' + userName)
+      .delete(this.baseUrl + '/api/auth/logout/' + userName)
       .subscribe(
         (data) => {
           console.log(data);
@@ -76,7 +79,7 @@ export class AuthService {
   refreshToken() {
     return this.httpClient
       .post<LoginResponse>(
-        'http://localhost:8080/api/auth/refresh/token',
+        this.baseUrl + '/api/auth/refresh/token',
         this.refreshTokenPayload
       )
       .pipe(
